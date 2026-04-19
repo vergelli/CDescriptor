@@ -26,7 +26,7 @@ local function format_skill_slot(slot_data)
     name = name .. " (Ultimate)"
   end
   if slot_data.scripts and next(slot_data.scripts) then
-    local clean_scripts = {}
+    local clean_scripts = { __key_order = { "a", "b", "c" } }
     for label, s in pairs(slot_data.scripts) do
       clean_scripts[label] = {
         __key_order = { "name", "description" },
@@ -41,7 +41,7 @@ end
 
 local function transform_bar(bar_slots)
   if not bar_slots then return {} end
-  local out = {}
+  local out = { __key_order = { "1", "2", "3", "4", "5", "R" } }
   for i = 1, 5 do
     local entry = format_skill_slot(bar_slots[i])
     if entry ~= nil then out[SLOT_LABELS[i]] = entry end
