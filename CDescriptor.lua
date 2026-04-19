@@ -11,6 +11,7 @@ function CDescriptor.log(msg)
 end
 
 local function on_addon_loaded()
+  CDescriptor.log("Cargado v" .. CDescriptor.version .. " — /cdescriptor para abrir")
   CDescriptor.Settings.load()
 
   -- Restore window position if saved

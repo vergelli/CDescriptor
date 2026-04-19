@@ -2,53 +2,55 @@
   <Controls>
     <TopLevelControl name="CDescriptorWindow" hidden="true" clampedToScreen="true" movable="true" mouseEnabled="true">
       <Anchor point="CENTER"/>
-      <Dimensions x="620" y="520"/>
+      <Dimensions x="620" y="530"/>
       <OnMoveStop>CDescriptor.UI.on_move_stop()</OnMoveStop>
+      <OnInitialized>CDescriptor.UI.on_initialized(self)</OnInitialized>
       <Controls>
 
-        <Backdrop name="$(parent)Bg" edgeSize="16" centerColor="0,0,0,0.85" edgeColor="0.8,0.6,0.1,0.9">
+        <Backdrop name="$(parent)Bg" inherits="ZO_DefaultBackdrop">
           <AnchorFill/>
         </Backdrop>
 
-        <Label name="$(parent)Title" text="CDescriptor" font="ZoFontHeader" color="1,0.8,0,1">
-          <Anchor point="TOP" offsetY="12"/>
+        <!-- Titulo -->
+        <Label name="$(parent)Title" font="ZoFontHeader" color="1,0.8,0,1" text="CDescriptor">
+          <Anchor point="TOP" offsetY="14"/>
         </Label>
 
+        <!-- Boton cerrar -->
         <Button name="$(parent)CloseButton" inherits="ZO_CloseButton">
-          <Anchor point="TOPRIGHT" offsetX="-6" offsetY="6"/>
+          <Anchor point="TOPRIGHT" offsetX="-4" offsetY="4"/>
           <OnClicked>CDescriptorWindow:SetHidden(true)</OnClicked>
         </Button>
 
+        <!-- Boton Generar -->
         <Button name="$(parent)GenerateButton" inherits="ZO_DefaultButton">
-          <Dimensions x="120" y="30"/>
-          <Anchor point="TOPLEFT" offsetX="20" offsetY="48"/>
+          <Dimensions x="130" y="32"/>
+          <Anchor point="TOPLEFT" offsetX="20" offsetY="50"/>
           <OnClicked>CDescriptor.UI.on_generate()</OnClicked>
-          <Controls>
-            <Label name="$(parent)Text" text="Generar" font="ZoFontGame"/>
-          </Controls>
         </Button>
 
+        <!-- Barra de progreso -->
         <StatusBar name="$(parent)ProgressBar" minimumValue="0" maximumValue="3" value="0">
-          <Dimensions x="560" y="16"/>
-          <Anchor point="TOPLEFT" offsetX="20" offsetY="88"/>
+          <Dimensions x="440" y="18"/>
+          <Anchor point="TOPLEFT" offsetX="165" offsetY="55"/>
         </StatusBar>
 
-        <Label name="$(parent)ProgressLabel" text="" font="ZoFontGameSmall" color="0.8,0.8,0.8,1">
+        <!-- Etiqueta de estado -->
+        <Label name="$(parent)ProgressLabel" font="ZoFontGameSmall" color="0.7,0.7,0.7,1" text="">
           <Anchor point="TOPLEFT" relativeTo="$(parent)ProgressBar" relativePoint="BOTTOMLEFT" offsetY="2"/>
         </Label>
 
+        <!-- Caja de output -->
         <EditBox name="$(parent)OutputBox" multiLine="true" maxInputCharacters="65000" font="ZoFontGameSmall">
-          <Dimensions x="560" y="330"/>
-          <Anchor point="TOPLEFT" offsetX="20" offsetY="118"/>
+          <Dimensions x="576" y="370"/>
+          <Anchor point="TOPLEFT" offsetX="22" offsetY="100"/>
         </EditBox>
 
+        <!-- Boton Copy -->
         <Button name="$(parent)CopyButton" inherits="ZO_DefaultButton">
-          <Dimensions x="120" y="30"/>
-          <Anchor point="BOTTOMRIGHT" offsetX="-20" offsetY="-16"/>
+          <Dimensions x="130" y="32"/>
+          <Anchor point="BOTTOMRIGHT" offsetX="-20" offsetY="-14"/>
           <OnClicked>CDescriptor.UI.on_copy()</OnClicked>
-          <Controls>
-            <Label name="$(parent)Text" text="Copy" font="ZoFontGame"/>
-          </Controls>
         </Button>
 
       </Controls>

@@ -1,6 +1,6 @@
 ## Title: CDescriptor
-## Description: Character build exporter to JSON
-## Author: federicocusot
+## Description: A module Addon that enable users to get structured information about its character
+## Author: Federico Vergelli
 ## Version: 0.1.0
 ## APIVersion: 101049
 ## SavedVariables: CDescriptorSavedVars
