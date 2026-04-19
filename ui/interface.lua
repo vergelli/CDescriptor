@@ -47,15 +47,25 @@ function M.init()
   local w = CDescriptor.Settings.get(SV.WINDOW_W)
   local h = CDescriptor.Settings.get(SV.WINDOW_H)
   if w and h then Controls.window:SetDimensions(w, h) end
-  Controls.window:SetDimensionConstraints(400, 320, 0, 0)
+  Controls.window:SetDimensionConstraints(380, 370, 0, 0)
 end
 
+local status_pulse = nil
+
 local function set_status(msg, highlight)
+  if status_pulse then
+    status_pulse:Stop()
+    status_pulse = nil
+    Controls.status:SetAlpha(1)
+  end
   Controls.status:SetText(msg or "")
   if highlight then
-    Controls.status:SetColor(1, 0.8, 0, 1)    -- ESO amber
+    Controls.status:SetColor(0.3, 1, 0.3, 1)    -- green
+    status_pulse = ZO_AlphaAnimation:New(Controls.status)
+    status_pulse:SetMinMaxAlpha(0.4, 1)
+    status_pulse:PingPong(0, 1, 500, 4)          -- 500ms per half-cycle, 4 loops
   else
-    Controls.status:SetColor(0.7, 0.7, 0.7, 1) -- default gray
+    Controls.status:SetColor(0.7, 0.7, 0.7, 1)  -- default gray
   end
 end
 
@@ -129,7 +139,7 @@ function M.on_clear()
 end
 
 function M.on_copy()
-  PlaySound(SOUNDS.COMBO_CLICK)
+  PlaySound(SOUNDS.LFG_READY_CHECK)
   Controls.output:TakeFocus()
   Controls.output:SelectAll()
   set_status(C.UI.STATUS_COPY, true)

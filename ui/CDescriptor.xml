@@ -41,7 +41,8 @@
           <Anchor point="LEFT" relativeTo="$(parent)GenerateButton" relativePoint="RIGHT" offsetX="12"/>
         </Label>
 
-        <!-- Checkbox row — labels in ESO amber -->
+        <!-- Checkboxes — stacked vertically, each anchored to the one above.
+             To add a new checkbox: copy the last pair and anchor it to the previous BOTTOMLEFT. -->
         <Button name="$(parent)CheckSets" inherits="ZO_CheckButton">
           <Anchor point="TOPLEFT" offsetX="20" offsetY="106"/>
         </Button>
@@ -53,7 +54,7 @@
         </Label>
 
         <Button name="$(parent)CheckStats" inherits="ZO_CheckButton">
-          <Anchor point="TOPLEFT" offsetX="222" offsetY="106"/>
+          <Anchor point="TOPLEFT" relativeTo="$(parent)CheckSets" relativePoint="BOTTOMLEFT" offsetY="6"/>
         </Button>
         <Label name="$(parent)CheckStatsLabel" font="ZoFontGame" color="0.9,0.78,0.5,1" mouseEnabled="true">
           <Anchor point="LEFT" relativeTo="$(parent)CheckStats" relativePoint="RIGHT" offsetX="6"/>
@@ -63,7 +64,7 @@
         </Label>
 
         <Button name="$(parent)CheckBuffs" inherits="ZO_CheckButton">
-          <Anchor point="TOPLEFT" offsetX="408" offsetY="106"/>
+          <Anchor point="TOPLEFT" relativeTo="$(parent)CheckStats" relativePoint="BOTTOMLEFT" offsetY="6"/>
         </Button>
         <Label name="$(parent)CheckBuffsLabel" font="ZoFontGame" color="0.9,0.78,0.5,1" mouseEnabled="true">
           <Anchor point="LEFT" relativeTo="$(parent)CheckBuffs" relativePoint="RIGHT" offsetX="6"/>
@@ -75,14 +76,14 @@
         <!-- Divider above output -->
         <Texture name="$(parent)DividerBottom" textureFile="EsoUI/Art/Miscellaneous/horizontalDivider.dds">
           <Dimensions y="4"/>
-          <Anchor point="TOPLEFT"  offsetX="20" offsetY="130"/>
-          <Anchor point="TOPRIGHT" offsetX="-20" offsetY="130"/>
+          <Anchor point="TOPLEFT"  relativeTo="$(parent)CheckBuffs" relativePoint="BOTTOMLEFT"  offsetX="0"   offsetY="10"/>
+          <Anchor point="TOPRIGHT" relativeTo="$(parent)CheckBuffs" relativePoint="BOTTOMRIGHT" offsetX="-20" offsetY="10"/>
           <TextureCoords top="0" bottom="1" left="0.181640625" right="0.818359375"/>
         </Texture>
 
         <!-- Output area — font set to ZoFontChat in interface.lua -->
         <Backdrop name="$(parent)OutputBg" inherits="ZO_MultiLineEditBackdrop_Keyboard">
-          <Anchor point="TOPLEFT" offsetX="20" offsetY="142"/>
+          <Anchor point="TOPLEFT"     relativeTo="$(parent)DividerBottom" relativePoint="BOTTOMLEFT"  offsetX="0"   offsetY="8"/>
           <Anchor point="BOTTOMRIGHT" offsetX="-44" offsetY="-54"/>
           <Controls>
             <EditBox name="CDescriptorOutputBox" inherits="ZO_DefaultEditMultiLineForBackdrop" maxInputCharacters="100000">
