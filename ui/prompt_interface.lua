@@ -1,47 +1,51 @@
--- Manages the prompt configuration window (Feature 4 + 5).
+-- Manages the inline prompt configuration panel.
 CDescriptor = CDescriptor or {}
+local CDescriptor = CDescriptor
+
 CDescriptor.PromptUI = {}
 
-local M = CDescriptor.PromptUI
-local C
+local M        = CDescriptor.PromptUI
+local C        -- set in M.init()
 local Controls = {}
 
--- ── Content type resolution ────────────────────────────────────────────────
+local PANEL_HEIGHT = 144
+
+-- ── Content type lookup ───────────────────────────────────────────────────────
 
 local CONTENT_TYPES = {
-  ["PvE:Solo"]                        = "PvE solo content.",
-  ["PvE:Dungeons"]                    = "PvE group dungeon content.",
-  ["PvE:Dungeons:Normal"]             = "PvE group dungeon content, normal difficulty.",
-  ["PvE:Dungeons:Veteran"]            = "PvE group dungeon content, veteran difficulty.",
-  ["PvE:Dungeons:Veteran Hard Mode"]  = "PvE group dungeon content, veteran hard mode difficulty.",
-  ["PvE:Trials"]                      = "PvE Trial content (12-player).",
-  ["PvE:Trials:Normal"]               = "PvE Trial content (12-player), normal difficulty.",
-  ["PvE:Trials:Veteran"]              = "PvE Trial content (12-player), veteran difficulty.",
-  ["PvE:Trials:Veteran Hard Mode"]    = "PvE Trial content (12-player), veteran hard mode — hardest PvE content in the game.",
-  ["PvP:Cyrodiil"]                    = "PvP open world (Cyrodiil).",
-  ["PvP:Imperial City"]               = "PvP Imperial City.",
-  ["PvP:Battlegrounds"]               = "PvP instanced (Battlegrounds).",
+  ["PvE:Solo"]                       = "PvE solo content.",
+  ["PvE:Dungeons"]                   = "PvE group dungeon content.",
+  ["PvE:Dungeons:Normal"]            = "PvE group dungeon content, normal difficulty.",
+  ["PvE:Dungeons:Veteran"]           = "PvE group dungeon content, veteran difficulty.",
+  ["PvE:Dungeons:Veteran Hard Mode"] = "PvE group dungeon content, veteran hard mode difficulty.",
+  ["PvE:Trials"]                     = "PvE Trial content (12-player).",
+  ["PvE:Trials:Normal"]              = "PvE Trial content (12-player), normal difficulty.",
+  ["PvE:Trials:Veteran"]             = "PvE Trial content (12-player), veteran difficulty.",
+  ["PvE:Trials:Veteran Hard Mode"]   = "PvE Trial content (12-player), veteran hard mode — hardest PvE content in the game.",
+  ["PvP:Cyrodiil"]                   = "PvP open world (Cyrodiil).",
+  ["PvP:Imperial City"]              = "PvP Imperial City.",
+  ["PvP:Battlegrounds"]              = "PvP instanced (Battlegrounds).",
 }
 
 local LANGUAGES = {
-  { label = "English",    value = "English."              },
-  { label = "Español",    value = "Spanish."              },
-  { label = "Français",   value = "French."               },
-  { label = "Deutsch",    value = "German."               },
-  { label = "Italiano",   value = "Italian."              },
-  { label = "Português",  value = "Portuguese."           },
-  { label = "日本語",      value = "Japanese."             },
-  { label = "한국어",      value = "Korean."               },
-  { label = "中文",        value = "Chinese (Simplified)." },
-  { label = "Русский",    value = "Russian."              },
+  { label = "English",   value = "English."              },
+  { label = "Espanol",   value = "Spanish."              },
+  { label = "Francais",  value = "French."               },
+  { label = "Deutsch",   value = "German."               },
+  { label = "Italiano",  value = "Italian."              },
+  { label = "Portugues", value = "Portuguese."           },
+  { label = "Japanese",  value = "Japanese."             },
+  { label = "Korean",    value = "Korean."               },
+  { label = "Chinese",   value = "Chinese (Simplified)." },
+  { label = "Russian",   value = "Russian."              },
 }
 
 local ROLE_TYPES = {
-  [""]        = "Full analysis: damage, survivability, and support.",
-  ["DPS"]     = "Prioritize maximizing damage output.",
-  ["Tank"]    = "Prioritize maximizing survivability and damage mitigation.",
-  ["Healer"]  = "Prioritize maximizing support and healing output.",
-  ["Hybrid"]  = "Hybrid role: balance between damage and survivability or support.",
+  [""]       = "Full analysis: damage, survivability, and support.",
+  ["DPS"]    = "Prioritize maximizing damage output.",
+  ["Tank"]   = "Prioritize maximizing survivability and damage mitigation.",
+  ["Healer"] = "Prioritize maximizing support and healing output.",
+  ["Hybrid"] = "Hybrid role: balance between damage and survivability or support.",
 }
 
 local SUBCATS = {
@@ -49,14 +53,13 @@ local SUBCATS = {
   PvP = { "", "Cyrodiil", "Imperial City", "Battlegrounds" },
 }
 local DIFFS_FOR = { Dungeons = true, Trials = true }
-local DIFFS = { "", "Normal", "Veteran", "Veteran Hard Mode" }
+local DIFFS     = { "", "Normal", "Veteran", "Veteran Hard Mode" }
 
--- ── Helpers ────────────────────────────────────────────────────────────────
+-- ── Helpers ───────────────────────────────────────────────────────────────────
 
-local function sv(key)       return CDescriptor.Settings.get(key)   end
-local function sv_set(k, v)  CDescriptor.Settings.set(k, v)         end
-
-local function combo(ctrl)   return ctrl.m_comboBox                  end
+local function sv(key)      return CDescriptor.Settings.get(key) end
+local function sv_set(k, v) CDescriptor.Settings.set(k, v)       end
+local function combo(ctrl)  return ctrl.m_comboBox               end
 
 local function get_content_type_str()
   local cat  = sv(C.SAVED_VARS.PROMPT_CAT)  or ""
@@ -83,10 +86,21 @@ local function get_role_str()
   return ROLE_TYPES[role] or ROLE_TYPES[""]
 end
 
--- ── ComboBox population ────────────────────────────────────────────────────
+-- ── ComboBox population ───────────────────────────────────────────────────────
 
-local sub_combo_cb -- forward declaration for use in populate_sub
+local sub_combo_cb
 local diff_combo_cb
+
+local function populate_diff()
+  local diff_combo = combo(Controls.content_diff)
+  diff_combo:ClearItems()
+  for _, name in ipairs(DIFFS) do
+    diff_combo:AddItem(diff_combo:CreateItemEntry(name == "" and "-- select --" or name,
+      function() diff_combo_cb(name) end))
+  end
+  local saved = sv(C.SAVED_VARS.PROMPT_DIFF) or ""
+  Controls.content_diff:GetNamedChild("SelectedItemText"):SetText(saved == "" and "-- select --" or saved)
+end
 
 local function populate_sub(cat)
   local sub_combo = combo(Controls.content_sub)
@@ -99,50 +113,18 @@ local function populate_sub(cat)
   end
   Controls.content_sub:SetHidden(false)
   for _, name in ipairs(options) do
-    sub_combo:AddItem(sub_combo:CreateItemEntry(name == "" and "── select ──" or name,
+    sub_combo:AddItem(sub_combo:CreateItemEntry(name == "" and "-- select --" or name,
       function() sub_combo_cb(name) end))
   end
-  -- Restore saved selection
   local saved = sv(C.SAVED_VARS.PROMPT_SUB) or ""
-  local display = saved == "" and "── select ──" or saved
-  Controls.content_sub:GetNamedChild("SelectedItemText"):SetText(display)
-  -- Show/hide diff based on saved sub
+  Controls.content_sub:GetNamedChild("SelectedItemText"):SetText(saved == "" and "-- select --" or saved)
   local show_diff = DIFFS_FOR[saved] == true
   Controls.content_diff:SetHidden(not show_diff)
 end
 
-local function populate_diff()
-  local diff_combo = combo(Controls.content_diff)
-  diff_combo:ClearItems()
-  for _, name in ipairs(DIFFS) do
-    diff_combo:AddItem(diff_combo:CreateItemEntry(name == "" and "── select ──" or name,
-      function() diff_combo_cb(name) end))
-  end
-  -- Restore saved selection
-  local saved = sv(C.SAVED_VARS.PROMPT_DIFF) or ""
-  local display = saved == "" and "── select ──" or saved
-  Controls.content_diff:GetNamedChild("SelectedItemText"):SetText(display)
-end
-
-local function update_warning()
-  local custom = sv(C.SAVED_VARS.PROMPT_CUSTOM)
-  if custom and custom ~= "" then
-    local missing = CDescriptor.Prompt.missing_placeholders(custom)
-    if #missing > 0 then
-      Controls.warn_label:SetText("Some dynamic fields not in your custom prompt: " .. table.concat(missing, ", "))
-    else
-      Controls.warn_label:SetText("")
-    end
-  else
-    Controls.warn_label:SetText("")
-  end
-end
-
--- ── Callbacks ──────────────────────────────────────────────────────────────
-
 function sub_combo_cb(name)
   sv_set(C.SAVED_VARS.PROMPT_SUB,  name)
-  sv_set(C.SAVED_VARS.PROMPT_DIFF, "")  -- reset diff on sub change
+  sv_set(C.SAVED_VARS.PROMPT_DIFF, "")
   local show_diff = DIFFS_FOR[name] == true
   Controls.content_diff:SetHidden(not show_diff)
   if show_diff then populate_diff() end
@@ -152,176 +134,121 @@ function diff_combo_cb(name)
   sv_set(C.SAVED_VARS.PROMPT_DIFF, name)
 end
 
-local editing_manually = false
+-- ── Callbacks ─────────────────────────────────────────────────────────────────
 
 function M.on_patch_changed()
-  local text = Controls.patch_input:GetText()
-  sv_set(C.SAVED_VARS.PROMPT_PATCH, text)
+  sv_set(C.SAVED_VARS.PROMPT_PATCH, Controls.patch_input:GetText())
 end
 
-function M.on_prompt_text_changed()
-  local text = Controls.prompt_text:GetText()
-  sv_set(C.SAVED_VARS.PROMPT_CUSTOM, text)
-  update_warning()
-end
-
-function M.toggle_edit()
-  editing_manually = not editing_manually
-  Controls.text_bg:SetHidden(not editing_manually)
-  Controls.edit_btn:SetText(editing_manually and "Hide prompt text" or "Edit manually")
-  if editing_manually then
-    local custom = sv(C.SAVED_VARS.PROMPT_CUSTOM)
-    -- Show saved custom prompt if it exists; otherwise leave empty so the
-    -- user writes from scratch rather than editing the internal default.
-    Controls.prompt_text:SetText(custom and custom ~= "" and custom or "")
-  end
-end
-
-function M.reset_prompt()
-  sv_set(C.SAVED_VARS.PROMPT_CUSTOM, nil)
-  if editing_manually then
-    Controls.prompt_text:SetText(CDescriptor.Prompt.DEFAULT_PROMPT)
-  end
-  Controls.warn_label:SetText("")
-end
-
-function M.close()
-  Controls.window:SetHidden(true)
-  -- Uncheck "Include prompt" in main window
-  local SV = C.SAVED_VARS
-  sv_set(SV.INCLUDE_PROMPT, false)
-  local check = _G[C.CONTROLS.CHECK_PROMPT]
-  if check then ZO_CheckButton_SetCheckState(check, false) end
-end
-
-function M.on_move_stop()
-  local x, y = Controls.window:GetScreenRect()
-  sv_set(C.SAVED_VARS.PROMPT_WIN_X, x)
-  sv_set(C.SAVED_VARS.PROMPT_WIN_Y, y)
-end
-
--- ── Init ──────────────────────────────────────────────────────────────────
+-- ── Init ──────────────────────────────────────────────────────────────────────
 
 function M.init()
   C = CDescriptor.Constants
   local names = C.CONTROLS
+  local SV    = C.SAVED_VARS
 
-  Controls.window       = _G[names.PROMPT_WINDOW]
+  Controls.panel        = _G[names.PROMPT_PANEL]
   Controls.patch_input  = _G[names.PROMPT_PATCH]
   Controls.lang         = _G[names.PROMPT_LANG]
   Controls.content_cat  = _G[names.PROMPT_CONTENT_CAT]
   Controls.content_sub  = _G[names.PROMPT_CONTENT_SUB]
   Controls.content_diff = _G[names.PROMPT_CONTENT_DIFF]
   Controls.role         = _G[names.PROMPT_ROLE]
-  Controls.warn_label   = _G[names.PROMPT_WARN_LABEL]
-  Controls.edit_btn     = _G[names.PROMPT_WINDOW .. "EditBtn"]
-  Controls.reset_btn    = _G[names.PROMPT_WINDOW .. "ResetBtn"]
-  Controls.text_bg      = _G[names.PROMPT_WINDOW .. "TextBg"]
-  Controls.prompt_text  = _G[names.PROMPT_TEXT]
 
-  local SV = C.SAVED_VARS
-
-  -- Button labels
-  Controls.edit_btn:SetText("Edit manually")
-  Controls.reset_btn:SetText("Reset to default")
-
-  -- Restore patch input
-  Controls.patch_input:SetText(sv(SV.PROMPT_PATCH) or "")
-
-  -- Populate language combo
-  local lang_combo = combo(Controls.lang)
-  lang_combo:SetSortsItems(false)
-  for _, lang in ipairs(LANGUAGES) do
-    local label = lang.label
-    lang_combo:AddItem(lang_combo:CreateItemEntry(label, function()
-      sv_set(SV.PROMPT_LANG, label)
-    end))
+  -- Ensure panel starts collapsed so DividerBottom sits flush below checkboxes
+  if Controls.panel then
+    Controls.panel:SetHeight(0)
+    Controls.panel:SetHidden(true)
   end
-  local saved_lang = sv(SV.PROMPT_LANG) or "English"
-  Controls.lang:GetNamedChild("SelectedItemText"):SetText(saved_lang)
 
-  -- Populate category combo
-  local cat_combo = combo(Controls.content_cat)
-  cat_combo:SetSortsItems(false)
-  cat_combo:AddItem(cat_combo:CreateItemEntry("── select ──", function()
-    sv_set(SV.PROMPT_CAT, "")
-    sv_set(SV.PROMPT_SUB, "")
-    sv_set(SV.PROMPT_DIFF, "")
-    Controls.content_sub:SetHidden(true)
-    Controls.content_diff:SetHidden(true)
-  end))
-  cat_combo:AddItem(cat_combo:CreateItemEntry("PvE", function()
-    sv_set(SV.PROMPT_CAT, "PvE")
-    sv_set(SV.PROMPT_SUB, "")
-    sv_set(SV.PROMPT_DIFF, "")
-    populate_sub("PvE")
-  end))
-  cat_combo:AddItem(cat_combo:CreateItemEntry("PvP", function()
-    sv_set(SV.PROMPT_CAT, "PvP")
-    sv_set(SV.PROMPT_SUB, "")
-    sv_set(SV.PROMPT_DIFF, "")
-    populate_sub("PvP")
-  end))
+  -- Patch input
+  if Controls.patch_input then
+    Controls.patch_input:SetText(sv(SV.PROMPT_PATCH) or "")
+  end
 
-  -- Restore category selection display
-  local saved_cat = sv(SV.PROMPT_CAT) or ""
-  local cat_display = saved_cat == "" and "── select ──" or saved_cat
-  Controls.content_cat:GetNamedChild("SelectedItemText"):SetText(cat_display)
-
-  -- Populate sub/diff based on saved category
-  if saved_cat ~= "" then
-    populate_sub(saved_cat)
-    if DIFFS_FOR[sv(SV.PROMPT_SUB) or ""] then
-      populate_diff()
+  -- Language combo
+  if Controls.lang then
+    local lang_combo = combo(Controls.lang)
+    lang_combo:SetSortsItems(false)
+    for _, lang in ipairs(LANGUAGES) do
+      local label = lang.label
+      lang_combo:AddItem(lang_combo:CreateItemEntry(label, function()
+        sv_set(SV.PROMPT_LANG, label)
+      end))
     end
-  else
-    Controls.content_sub:SetHidden(true)
-    Controls.content_diff:SetHidden(true)
+    Controls.lang:GetNamedChild("SelectedItemText"):SetText(sv(SV.PROMPT_LANG) or "English")
   end
 
-  -- Populate role combo
-  local role_combo = combo(Controls.role)
-  role_combo:SetSortsItems(false)
-  local roles = { "", "DPS", "Tank", "Healer", "Hybrid" }
-  local role_labels = { "── full analysis ──", "DPS", "Tank", "Healer", "Hybrid" }
-  for i, key in ipairs(roles) do
-    local label = role_labels[i]
-    role_combo:AddItem(role_combo:CreateItemEntry(label, function()
-      sv_set(SV.PROMPT_ROLE, key)
+  -- Category combo
+  if Controls.content_cat then
+    local cat_combo = combo(Controls.content_cat)
+    cat_combo:SetSortsItems(false)
+    cat_combo:AddItem(cat_combo:CreateItemEntry("-- select --", function()
+      sv_set(SV.PROMPT_CAT,  "")
+      sv_set(SV.PROMPT_SUB,  "")
+      sv_set(SV.PROMPT_DIFF, "")
+      Controls.content_sub:SetHidden(true)
+      Controls.content_diff:SetHidden(true)
     end))
+    cat_combo:AddItem(cat_combo:CreateItemEntry("PvE", function()
+      sv_set(SV.PROMPT_CAT,  "PvE")
+      sv_set(SV.PROMPT_SUB,  "")
+      sv_set(SV.PROMPT_DIFF, "")
+      populate_sub("PvE")
+    end))
+    cat_combo:AddItem(cat_combo:CreateItemEntry("PvP", function()
+      sv_set(SV.PROMPT_CAT,  "PvP")
+      sv_set(SV.PROMPT_SUB,  "")
+      sv_set(SV.PROMPT_DIFF, "")
+      populate_sub("PvP")
+    end))
+    local saved_cat = sv(SV.PROMPT_CAT) or ""
+    Controls.content_cat:GetNamedChild("SelectedItemText"):SetText(saved_cat == "" and "-- select --" or saved_cat)
+    if saved_cat ~= "" then
+      populate_sub(saved_cat)
+      if DIFFS_FOR[sv(SV.PROMPT_SUB) or ""] then populate_diff() end
+    else
+      Controls.content_sub:SetHidden(true)
+      Controls.content_diff:SetHidden(true)
+    end
   end
-  local saved_role = sv(SV.PROMPT_ROLE) or ""
-  local role_display = saved_role == "" and "── full analysis ──" or saved_role
-  Controls.role:GetNamedChild("SelectedItemText"):SetText(role_display)
 
-  -- Restore window position
-  local x = sv(SV.PROMPT_WIN_X)
-  local y = sv(SV.PROMPT_WIN_Y)
-  if x and y then
-    Controls.window:ClearAnchors()
-    Controls.window:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, x, y)
+  -- Role combo
+  if Controls.role then
+    local role_combo = combo(Controls.role)
+    role_combo:SetSortsItems(false)
+    local roles       = { "",               "DPS",  "Tank",  "Healer",  "Hybrid"  }
+    local role_labels = { "-- full analysis --", "DPS",  "Tank",  "Healer",  "Hybrid"  }
+    for i, key in ipairs(roles) do
+      local label = role_labels[i]
+      role_combo:AddItem(role_combo:CreateItemEntry(label, function()
+        sv_set(SV.PROMPT_ROLE, key)
+      end))
+    end
+    local saved_role = sv(SV.PROMPT_ROLE) or ""
+    Controls.role:GetNamedChild("SelectedItemText"):SetText(saved_role == "" and "-- full analysis --" or saved_role)
   end
-
-  update_warning()
 end
 
--- ── Show/hide ──────────────────────────────────────────────────────────────
+-- ── Show / Hide ───────────────────────────────────────────────────────────────
 
 function M.show()
-  Controls.window:SetHidden(false)
+  if not Controls.panel then return end
+  Controls.panel:SetHeight(PANEL_HEIGHT)
+  Controls.panel:SetHidden(false)
 end
 
 function M.hide()
-  Controls.window:SetHidden(true)
+  if not Controls.panel then return end
+  Controls.panel:SetHidden(true)
+  Controls.panel:SetHeight(0)
 end
 
--- ── Build settings for prompt engine ──────────────────────────────────────
+-- ── Build prompt settings for core/prompt.lua ─────────────────────────────────
 
 function M.build_prompt_settings()
-  local SV = C.SAVED_VARS
   return {
-    custom_prompt  = sv(SV.PROMPT_CUSTOM),
-    patch          = sv(SV.PROMPT_PATCH) or "",
+    patch          = sv(C.SAVED_VARS.PROMPT_PATCH) or "",
     content_type   = get_content_type_str(),
     analysis_focus = get_role_str(),
     language       = get_language_str(),

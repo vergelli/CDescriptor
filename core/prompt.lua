@@ -1,6 +1,7 @@
 -- Prompt engine: builds the system prompt from user settings and dropdowns.
 -- No ESO globals, no UI calls, no JSON knowledge.
 CDescriptor = CDescriptor or {}
+local CDescriptor = CDescriptor
 
 local M = {}
 

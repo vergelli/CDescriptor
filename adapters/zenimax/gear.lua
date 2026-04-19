@@ -1,7 +1,19 @@
 -- Item quality, armor type, and weapon type enums are mapped to readable strings
 -- here (adapter layer) since the ESO global constants are only available at runtime.
 CDescriptor = CDescriptor or {}
+local CDescriptor = CDescriptor
+
 CDescriptor.Adapters = CDescriptor.Adapters or {}
+
+local GetEquippedItemInfo       = GetEquippedItemInfo
+local GetItemLink               = GetItemLink
+local GetItemLinkName           = GetItemLinkName
+local GetItemLinkDisplayQuality = GetItemLinkDisplayQuality
+local GetItemLinkTraitInfo      = GetItemLinkTraitInfo
+local GetItemLinkEnchantInfo    = GetItemLinkEnchantInfo
+local GetItemLinkSetInfo        = GetItemLinkSetInfo
+local GetItemLinkArmorType      = GetItemLinkArmorType
+local GetItemLinkWeaponType     = GetItemLinkWeaponType
 
 local M = {}
 

@@ -1,6 +1,7 @@
 -- Defines __key_order arrays for JSON serialization order.
 -- Centralizing here avoids scattering ordering decisions across transform logic.
 CDescriptor = CDescriptor or {}
+local CDescriptor = CDescriptor
 
 CDescriptor.KeyOrders = {
   ROOT         = { "character", "bar_1_skills", "bar_2_skills", "gear", "sets_buffs", "stats", "buffs", "passive_skills", "champion_points" },

@@ -1,6 +1,13 @@
 -- Collects all set bonus tiers and piece counts from equipped items.
 CDescriptor = CDescriptor or {}
+local CDescriptor = CDescriptor
+
 CDescriptor.Adapters = CDescriptor.Adapters or {}
+
+local GetEquippedItemInfo     = GetEquippedItemInfo
+local GetItemLink             = GetItemLink
+local GetItemLinkSetInfo      = GetItemLinkSetInfo
+local GetItemLinkSetBonusInfo = GetItemLinkSetBonusInfo
 
 local M = {}
 

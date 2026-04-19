@@ -1,6 +1,6 @@
 <GuiXml>
   <Controls>
-    <TopLevelControl name="CDescriptorPromptWindow" hidden="true" clampedToScreen="true" movable="true" mouseEnabled="true">
+    <TopLevelControl name="CDescriptorPromptWindow" clampedToScreen="true" movable="true" mouseEnabled="true">
       <Anchor point="TOPLEFT" relativeTo="CDescriptorWindow" relativePoint="TOPRIGHT" offsetX="10"/>
       <Dimensions x="480" y="340"/>
       <OnMoveStop>CDescriptor.PromptUI.on_move_stop()</OnMoveStop>

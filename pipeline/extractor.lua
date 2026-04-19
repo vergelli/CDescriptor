@@ -1,5 +1,6 @@
 -- Orchestrates data collection. Receives adapters as parameter for testability.
 CDescriptor = CDescriptor or {}
+local CDescriptor = CDescriptor
 
 local M = {}
 

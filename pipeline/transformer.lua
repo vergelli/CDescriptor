@@ -1,10 +1,7 @@
 -- Maps raw extractor output to the output schema.
 -- Pure Lua: no ESO globals, no UI. Fully testable offline.
---
--- Future checkpoint system: each top-level section (character, skills, gear,
--- sets_buffs, stats, buffs) maps 1:1 to a future UI checkbox. Keep them
--- independently transformable.
 CDescriptor = CDescriptor or {}
+local CDescriptor = CDescriptor
 
 local M = {}
 local KO = CDescriptor.KeyOrders  -- populated by core/key_orders.lua before this runs

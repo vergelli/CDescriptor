@@ -1,4 +1,8 @@
 CDescriptor = CDescriptor or {}
+local CDescriptor = CDescriptor
+
+local EVENT_MANAGER       = EVENT_MANAGER
+local ZO_CreateStringId   = ZO_CreateStringId
 
 ZO_CreateStringId("SI_BINDING_NAME_CDESCRIPTOR_TOGGLE", "Toggle CDescriptor")
 

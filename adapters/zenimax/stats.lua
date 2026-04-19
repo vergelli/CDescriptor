@@ -1,5 +1,10 @@
 CDescriptor = CDescriptor or {}
+local CDescriptor = CDescriptor
+
 CDescriptor.Adapters = CDescriptor.Adapters or {}
+
+local GetPlayerStat           = GetPlayerStat
+local GetAttributeSpentPoints = GetAttributeSpentPoints
 
 local M = {}
 

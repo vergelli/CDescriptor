@@ -1,5 +1,18 @@
 CDescriptor = CDescriptor or {}
+local CDescriptor = CDescriptor
+
 CDescriptor.Adapters = CDescriptor.Adapters or {}
+
+local IsScribingEnabled                  = IsScribingEnabled
+local GetNumCraftedAbilities             = GetNumCraftedAbilities
+local GetCraftedAbilityIdAtIndex         = GetCraftedAbilityIdAtIndex
+local GetAbilityIdForCraftedAbilityId    = GetAbilityIdForCraftedAbilityId
+local GetCraftedAbilityActiveScriptIds   = GetCraftedAbilityActiveScriptIds
+local GetCraftedAbilityScriptDisplayName = GetCraftedAbilityScriptDisplayName
+local GetCraftedAbilityScriptDescription = GetCraftedAbilityScriptDescription
+local GetSlotType                        = GetSlotType
+local GetSlotName                        = GetSlotName
+local GetSlotBoundId                     = GetSlotBoundId
 
 local M = {}
 

@@ -1,5 +1,6 @@
 -- Minimal JSON serializer (encode only). No external dependencies.
 CDescriptor = CDescriptor or {}
+local CDescriptor = CDescriptor
 
 local M = {}
 

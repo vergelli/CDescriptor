@@ -1,5 +1,12 @@
 CDescriptor = CDescriptor or {}
+local CDescriptor = CDescriptor
+
 CDescriptor.UI = {}
+
+local ZO_CheckButton_IsChecked   = ZO_CheckButton_IsChecked
+local ZO_CheckButton_SetCheckState = ZO_CheckButton_SetCheckState
+local ZO_AlphaAnimation          = ZO_AlphaAnimation
+local PlaySound                  = PlaySound
 
 local M = CDescriptor.UI
 local C
@@ -63,6 +70,7 @@ function M.init()
   CDescriptor.PromptUI.init()
 
   if CDescriptor.Settings.get(SV.INCLUDE_PROMPT) then
+    Controls.window:SetDimensionConstraints(380, 600, 0, 0)
     CDescriptor.PromptUI.show()
   end
 end
@@ -109,8 +117,10 @@ function M.on_prompt_checkbox_changed()
   local checked = ZO_CheckButton_IsChecked(Controls.check_prompt)
   CDescriptor.Settings.set(C.SAVED_VARS.INCLUDE_PROMPT, checked)
   if checked then
+    Controls.window:SetDimensionConstraints(380, 600, 0, 0)
     CDescriptor.PromptUI.show()
   else
+    Controls.window:SetDimensionConstraints(380, 460, 0, 0)
     CDescriptor.PromptUI.hide()
   end
 end

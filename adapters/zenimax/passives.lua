@@ -1,6 +1,14 @@
 -- Collects learned passive skills across all relevant skill lines.
 CDescriptor = CDescriptor or {}
+local CDescriptor = CDescriptor
+
 CDescriptor.Adapters = CDescriptor.Adapters or {}
+
+local GetNumSkillLines     = GetNumSkillLines
+local GetSkillLineId       = GetSkillLineId
+local GetSkillLineNameById = GetSkillLineNameById
+local GetNumSkillAbilities = GetNumSkillAbilities
+local GetSkillAbilityInfo  = GetSkillAbilityInfo
 
 local M = {}
 

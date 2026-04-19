@@ -1,6 +1,7 @@
 -- Converts a transformed Lua table to a JSON string.
 -- Depends on CDescriptor.JSON (lib/json.lua). No business logic here.
 CDescriptor = CDescriptor or {}
+local CDescriptor = CDescriptor
 
 local M = {}
 

@@ -1,4 +1,6 @@
 CDescriptor = CDescriptor or {}
+local CDescriptor = CDescriptor
+
 CDescriptor.Settings = {}
 
 local M = CDescriptor.Settings
@@ -18,10 +20,7 @@ local DEFAULTS = {
   prompt_sub       = "",
   prompt_diff      = "",
   prompt_role      = "",
-  prompt_custom    = nil,
   prompt_lang      = "English",
-  prompt_win_x     = nil,
-  prompt_win_y     = nil,
 }
 
 function M.load()

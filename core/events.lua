@@ -1,5 +1,9 @@
 CDescriptor = CDescriptor or {}
+local CDescriptor = CDescriptor
+
 CDescriptor.Events = {}
+
+local EVENT_MANAGER = EVENT_MANAGER
 
 local M = CDescriptor.Events
 

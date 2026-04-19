@@ -1,4 +1,5 @@
 CDescriptor = CDescriptor or {}
+local CDescriptor = CDescriptor
 
 CDescriptor.Constants = {
   ADDON_NAME    = "CDescriptor",
@@ -21,14 +22,12 @@ CDescriptor.Constants = {
     CHECK_PASSIVES  = "CDescriptorWindowCheckPassives",
     CHECK_CP        = "CDescriptorWindowCheckCp",
     CHECK_PROMPT    = "CDescriptorWindowCheckPrompt",
-    PROMPT_WINDOW       = "CDescriptorPromptWindow",
+    PROMPT_PANEL        = "CDescriptorWindowPromptPanel",
     PROMPT_PATCH        = "CDescriptorPromptPatch",
     PROMPT_CONTENT_CAT  = "CDescriptorPromptContentCat",
     PROMPT_CONTENT_SUB  = "CDescriptorPromptContentSub",
     PROMPT_CONTENT_DIFF = "CDescriptorPromptContentDiff",
     PROMPT_ROLE         = "CDescriptorPromptRole",
-    PROMPT_WARN_LABEL   = "CDescriptorPromptWarnLabel",
-    PROMPT_TEXT         = "CDescriptorPromptText",
     PROMPT_LANG         = "CDescriptorPromptLang",
   },
 
@@ -67,9 +66,6 @@ CDescriptor.Constants = {
     PROMPT_SUB       = "prompt_sub",
     PROMPT_DIFF      = "prompt_diff",
     PROMPT_ROLE      = "prompt_role",
-    PROMPT_CUSTOM    = "prompt_custom",
     PROMPT_LANG      = "prompt_lang",
-    PROMPT_WIN_X     = "prompt_win_x",
-    PROMPT_WIN_Y     = "prompt_win_y",
   },
 }

@@ -25,7 +25,6 @@ pipeline/transformer.lua
 pipeline/serializer.lua
 bindings.xml
 ui/CDescriptor.xml
-ui/CDescriptorPrompt.xml
 ui/interface.lua
 ui/prompt_interface.lua
 CDescriptor.lua

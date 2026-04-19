@@ -1,5 +1,14 @@
 CDescriptor = CDescriptor or {}
+local CDescriptor = CDescriptor
+
 CDescriptor.Adapters = CDescriptor.Adapters or {}
+
+local GetGameTimeMilliseconds     = GetGameTimeMilliseconds
+local GetNumBuffs                 = GetNumBuffs
+local GetUnitBuffInfo             = GetUnitBuffInfo
+local GetAbilityDescription       = GetAbilityDescription
+local GetAbilityEffectDescription = GetAbilityEffectDescription
+local math_floor                  = math.floor
 
 local M = {}
 
@@ -16,7 +25,7 @@ function M.get_active_buffs()
     if name and name ~= "" and effect_type == BUFF_EFFECT_TYPE_BUFF then
       local duration_remaining = nil
       if time_ending > 0 then
-        local secs = math.floor(time_ending - now)
+        local secs = math_floor(time_ending - now)
         if secs > 0 then duration_remaining = secs end
       end
 

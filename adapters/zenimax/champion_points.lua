@@ -1,6 +1,18 @@
 -- Collects champion point investments grouped by discipline (slottable vs passive).
 CDescriptor = CDescriptor or {}
+local CDescriptor = CDescriptor
+
 CDescriptor.Adapters = CDescriptor.Adapters or {}
+
+local GetNumChampionDisciplines        = GetNumChampionDisciplines
+local GetChampionDisciplineId          = GetChampionDisciplineId
+local GetChampionDisciplineName        = GetChampionDisciplineName
+local GetNumChampionDisciplineSkills   = GetNumChampionDisciplineSkills
+local GetChampionSkillId               = GetChampionSkillId
+local GetNumPointsSpentOnChampionSkill = GetNumPointsSpentOnChampionSkill
+local GetChampionSkillName             = GetChampionSkillName
+local GetChampionSkillType             = GetChampionSkillType
+local IsChampionSystemUnlocked         = IsChampionSystemUnlocked
 
 local M = {}
 

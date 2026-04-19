@@ -1,5 +1,13 @@
 CDescriptor = CDescriptor or {}
+local CDescriptor = CDescriptor
+
 CDescriptor.Adapters = CDescriptor.Adapters or {}
+
+local GetUnitName           = GetUnitName
+local GetUnitClass          = GetUnitClass
+local GetUnitRace           = GetUnitRace
+local GetUnitLevel          = GetUnitLevel
+local GetUnitChampionPoints = GetUnitChampionPoints
 
 local M = {}
 
