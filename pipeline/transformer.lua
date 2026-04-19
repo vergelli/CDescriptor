@@ -180,6 +180,10 @@ function M.transform(raw, config)
   if include_stats then result.stats      = transform_stats(raw.stats)  end
   if include_buffs then result.buffs      = transform_buffs(raw.buffs)  end
 
+  if CDescriptor.Constants and CDescriptor.Constants.DEBUG and skills._debug then
+    result._debug = skills._debug
+  end
+
   return result
 end
 

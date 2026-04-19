@@ -4,7 +4,7 @@
 ![ESO API](https://img.shields.io/badge/ESO%20API-101049-orange)
 ![No dependencies](https://img.shields.io/badge/dependencies-none-brightgreen)
 
-A small Elder Scrolls Online addon that exports your character build as JSON — ready to paste into ChatGPT, a spreadsheet, or wherever you need it.
+A small Elder Scrolls Online addon that exports your character build as JSON, ready to paste into an LLM, a spreadsheet, or wherever you need it.
 
 ## What it does
 

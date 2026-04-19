@@ -1,8 +1,3 @@
--- NOTE on scribing detection:
--- GetSlotBoundId returns an ability ID. Crafted (scribing) ability IDs come from
--- GetCraftedAbilityIdAtIndex. It is unclear without in-game testing whether these
--- IDs overlap. Current implementation matches by display name (case-insensitive prefix).
--- This should be validated and refined after first in-game test.
 CDescriptor = CDescriptor or {}
 CDescriptor.Adapters = CDescriptor.Adapters or {}
 
@@ -36,12 +31,7 @@ local function get_scribing_scripts(crafted_id)
   return scripts
 end
 
--- ACTION_BAR_FIRST_NORMAL_SLOT_INDEX and ACTION_BAR_ULTIMATE_SLOT_INDEX are
--- 0-indexed constants; the GetSlot* API is 1-indexed, hence the +1.
--- This skips slots 1-2 (Light/Heavy Attack) and reads only the 5 skill slots
--- and the ultimate slot.
-local function get_bar_slots(hotbar_category)
-  local crafted_map = build_crafted_ability_map()
+local function get_bar_slots(hotbar_category, crafted_map, slot_names_out)
   local slots = {}
   local skill_index = 1
 
@@ -49,6 +39,10 @@ local function get_bar_slots(hotbar_category)
     local slot_type = GetSlotType(slot, hotbar_category)
     local is_ultimate = (slot_type == ACTION_SLOT_TYPE_ULTIMATE)
     local name = GetSlotName(slot, hotbar_category) or ""
+
+    if slot_names_out then
+      slot_names_out[#slot_names_out + 1] = name
+    end
 
     local slot_data = {
       name        = name,
@@ -77,10 +71,30 @@ local function get_bar_slots(hotbar_category)
 end
 
 function M.get_all_bars()
-  return {
-    bar_1 = get_bar_slots(HOTBAR_CATEGORY_PRIMARY),
-    bar_2 = get_bar_slots(HOTBAR_CATEGORY_BACKUP),
+  local crafted_map = build_crafted_ability_map()
+  local slot_names = nil
+
+  if CDescriptor.Constants and CDescriptor.Constants.DEBUG then
+    slot_names = {}
+  end
+
+  local result = {
+    bar_1 = get_bar_slots(HOTBAR_CATEGORY_PRIMARY,  crafted_map, slot_names),
+    bar_2 = get_bar_slots(HOTBAR_CATEGORY_BACKUP,   crafted_map, slot_names),
   }
+
+  if CDescriptor.Constants and CDescriptor.Constants.DEBUG then
+    local crafted_names = {}
+    for name in pairs(crafted_map) do
+      crafted_names[#crafted_names + 1] = name
+    end
+    result._debug = {
+      crafted_ability_names = crafted_names,
+      slot_names            = slot_names,
+    }
+  end
+
+  return result
 end
 
 CDescriptor.Adapters.Skills = M
