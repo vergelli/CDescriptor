@@ -3,9 +3,6 @@ CDescriptor.Adapters = CDescriptor.Adapters or {}
 
 local M = {}
 
--- Returns all active buffs on the player.
--- Each entry contains the name, remaining duration in seconds, stack count,
--- the abilityId (for future use), and whether the player cast it themselves.
 function M.get_active_buffs()
   local buffs = {}
   local now = GetGameTimeMilliseconds() / 1000
@@ -19,13 +16,21 @@ function M.get_active_buffs()
     if name and name ~= "" and effect_type == BUFF_EFFECT_TYPE_BUFF then
       local duration_remaining = nil
       if time_ending > 0 then
-        duration_remaining = math.max(0, math.floor(time_ending - now))
+        local secs = math.floor(time_ending - now)
+        if secs > 0 then duration_remaining = secs end
+      end
+
+      local description = nil
+      if ability_id and ability_id ~= 0 then
+        description = GetAbilityDescription(ability_id, nil, "player") or nil
+        if description == "" then description = nil end
       end
 
       buffs[#buffs + 1] = {
         name               = name,
+        description        = description,
         ability_id         = ability_id,
-        duration_remaining = duration_remaining,  -- nil means permanent/passive
+        duration_remaining = duration_remaining,
         stacks             = stack_count > 1 and stack_count or nil,
         cast_by_player     = cast_by_player,
       }

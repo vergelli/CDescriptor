@@ -42,7 +42,13 @@ end
 
 function M.get_stats()
   init_stat_map()
-  local result = {}
+  local result = {
+    attribute_points = {
+      health  = GetAttributeSpentPoints(ATTRIBUTE_HEALTH),
+      magicka = GetAttributeSpentPoints(ATTRIBUTE_MAGICKA),
+      stamina = GetAttributeSpentPoints(ATTRIBUTE_STAMINA),
+    },
+  }
   for _, entry in ipairs(STAT_MAP) do
     result[entry.key] = GetPlayerStat(entry.stat, STAT_BONUS_OPTION_APPLY_BONUS)
   end

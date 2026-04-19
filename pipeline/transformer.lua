@@ -134,6 +134,9 @@ local function transform_buffs(buffs)
   local out = {}
   for _, b in ipairs(buffs) do
     local entry = { name = b.name }
+    if b.description then
+      entry.description = strip_markup(b.description)
+    end
     if b.duration_remaining ~= nil then
       entry.duration_remaining = b.duration_remaining
     end
