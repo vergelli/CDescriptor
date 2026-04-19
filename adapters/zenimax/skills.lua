@@ -3,6 +3,23 @@ CDescriptor.Adapters = CDescriptor.Adapters or {}
 
 local M = {}
 
+-- Maps ability_id → crafted_id using the inverse function GetAbilityIdForCraftedAbilityId.
+-- GetAbilityCraftedAbilityId(abilityId) doesn't reliably resolve morph IDs;
+-- iterating crafted abilities and reversing the map is the correct approach.
+local function build_crafted_ability_map()
+  local map = {}  -- ability_id -> crafted_id
+  if not IsScribingEnabled or not IsScribingEnabled() then return map end
+  local n = GetNumCraftedAbilities()
+  for i = 1, n do
+    local crafted_id = GetCraftedAbilityIdAtIndex(i)
+    local ability_id = GetAbilityIdForCraftedAbilityId(crafted_id)
+    if ability_id and ability_id ~= 0 then
+      map[ability_id] = crafted_id
+    end
+  end
+  return map
+end
+
 local function get_scribing_scripts(crafted_id)
   local p_id, s_id, t_id = GetCraftedAbilityActiveScriptIds(crafted_id)
   local slots = { p_id, s_id, t_id }
@@ -19,17 +36,24 @@ local function get_scribing_scripts(crafted_id)
   return scripts
 end
 
--- ACTION_BAR_FIRST_NORMAL_SLOT_INDEX and ACTION_BAR_ULTIMATE_SLOT_INDEX are
--- 0-indexed constants; the GetSlot* API is 1-indexed, hence the +1.
-local function get_bar_slots(hotbar_category)
+local function get_bar_slots(hotbar_category, crafted_map, debug_out)
   local slots = {}
   local skill_index = 1
 
   for slot = ACTION_BAR_FIRST_NORMAL_SLOT_INDEX + 1, ACTION_BAR_ULTIMATE_SLOT_INDEX + 1 do
-    local slot_type  = GetSlotType(slot, hotbar_category)
+    local slot_type   = GetSlotType(slot, hotbar_category)
     local is_ultimate = (slot_type == ACTION_SLOT_TYPE_ULTIMATE)
-    local name       = GetSlotName(slot, hotbar_category) or ""
-    local ability_id = GetSlotBoundId(slot, hotbar_category)
+    local name        = GetSlotName(slot, hotbar_category) or ""
+    local ability_id  = GetSlotBoundId(slot, hotbar_category)
+
+    if debug_out then
+      debug_out[#debug_out + 1] = {
+        slot       = slot,
+        name       = name,
+        ability_id = ability_id,
+        matched    = crafted_map[ability_id] ~= nil,
+      }
+    end
 
     local slot_data = {
       name        = name,
@@ -38,13 +62,11 @@ local function get_bar_slots(hotbar_category)
       scripts     = nil,
     }
 
-    if ability_id and ability_id ~= 0 and IsScribingEnabled and IsScribingEnabled() then
-      local crafted_id = GetAbilityCraftedAbilityId(ability_id)
-      if crafted_id and crafted_id ~= 0 then
-        local scripts = get_scribing_scripts(crafted_id)
-        if next(scripts) then
-          slot_data.scripts = scripts
-        end
+    local crafted_id = crafted_map[ability_id]
+    if crafted_id then
+      local scripts = get_scribing_scripts(crafted_id)
+      if next(scripts) then
+        slot_data.scripts = scripts
       end
     end
 
@@ -60,10 +82,33 @@ local function get_bar_slots(hotbar_category)
 end
 
 function M.get_all_bars()
-  return {
-    bar_1 = get_bar_slots(HOTBAR_CATEGORY_PRIMARY),
-    bar_2 = get_bar_slots(HOTBAR_CATEGORY_BACKUP),
+  local crafted_map = build_crafted_ability_map()
+  local debug_slots = nil
+
+  if CDescriptor.Constants and CDescriptor.Constants.DEBUG then
+    debug_slots = {}
+  end
+
+  local result = {
+    bar_1 = get_bar_slots(HOTBAR_CATEGORY_PRIMARY, crafted_map, debug_slots),
+    bar_2 = get_bar_slots(HOTBAR_CATEGORY_BACKUP,  crafted_map, debug_slots),
   }
+
+  if debug_slots then
+    local crafted_map_debug = {}
+    for ability_id, crafted_id in pairs(crafted_map) do
+      crafted_map_debug[#crafted_map_debug + 1] = {
+        ability_id = ability_id,
+        crafted_id = crafted_id,
+      }
+    end
+    result._debug = {
+      crafted_map = crafted_map_debug,
+      slots       = debug_slots,
+    }
+  end
+
+  return result
 end
 
 CDescriptor.Adapters.Skills = M
