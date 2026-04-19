@@ -15,9 +15,10 @@ function M.init()
   Controls.generate  = _G[names.GENERATE_BUTTON]
   Controls.copy      = _G[names.COPY_BUTTON]
   Controls.clear     = _G[names.CLEAR_BUTTON]
-  Controls.check_sets  = _G[names.CHECK_SETS]
-  Controls.check_stats = _G[names.CHECK_STATS]
-  Controls.check_buffs = _G[names.CHECK_BUFFS]
+  Controls.check_sets     = _G[names.CHECK_SETS]
+  Controls.check_stats    = _G[names.CHECK_STATS]
+  Controls.check_buffs    = _G[names.CHECK_BUFFS]
+  Controls.check_passives = _G[names.CHECK_PASSIVES]
 
   Controls.generate:SetText(C.UI.GENERATE_BUTTON)
   Controls.copy:SetText(C.UI.COPY_BUTTON)
@@ -25,20 +26,23 @@ function M.init()
   Controls.output:SetFont("ZoFontChat")
 
   -- Set checkbox labels
-  _G[names.CHECK_SETS  .. "Label"]:SetText(C.UI.CHECK_SETS_LABEL)
-  _G[names.CHECK_STATS .. "Label"]:SetText(C.UI.CHECK_STATS_LABEL)
-  _G[names.CHECK_BUFFS .. "Label"]:SetText(C.UI.CHECK_BUFFS_LABEL)
+  _G[names.CHECK_SETS     .. "Label"]:SetText(C.UI.CHECK_SETS_LABEL)
+  _G[names.CHECK_STATS    .. "Label"]:SetText(C.UI.CHECK_STATS_LABEL)
+  _G[names.CHECK_BUFFS    .. "Label"]:SetText(C.UI.CHECK_BUFFS_LABEL)
+  _G[names.CHECK_PASSIVES .. "Label"]:SetText(C.UI.CHECK_PASSIVES_LABEL)
 
   -- Restore saved checkbox states
   local SV = C.SAVED_VARS
-  ZO_CheckButton_SetCheckState(Controls.check_sets,  CDescriptor.Settings.get(SV.INCLUDE_SETS))
-  ZO_CheckButton_SetCheckState(Controls.check_stats, CDescriptor.Settings.get(SV.INCLUDE_STATS))
-  ZO_CheckButton_SetCheckState(Controls.check_buffs, CDescriptor.Settings.get(SV.INCLUDE_BUFFS))
+  ZO_CheckButton_SetCheckState(Controls.check_sets,     CDescriptor.Settings.get(SV.INCLUDE_SETS))
+  ZO_CheckButton_SetCheckState(Controls.check_stats,    CDescriptor.Settings.get(SV.INCLUDE_STATS))
+  ZO_CheckButton_SetCheckState(Controls.check_buffs,    CDescriptor.Settings.get(SV.INCLUDE_BUFFS))
+  ZO_CheckButton_SetCheckState(Controls.check_passives, CDescriptor.Settings.get(SV.INCLUDE_PASSIVES))
 
   -- Persist state on click
-  Controls.check_sets.clickedCallback  = function() M.on_checkbox_changed(Controls.check_sets,  SV.INCLUDE_SETS)  end
-  Controls.check_stats.clickedCallback = function() M.on_checkbox_changed(Controls.check_stats, SV.INCLUDE_STATS) end
-  Controls.check_buffs.clickedCallback = function() M.on_checkbox_changed(Controls.check_buffs, SV.INCLUDE_BUFFS) end
+  Controls.check_sets.clickedCallback     = function() M.on_checkbox_changed(Controls.check_sets,     SV.INCLUDE_SETS)     end
+  Controls.check_stats.clickedCallback    = function() M.on_checkbox_changed(Controls.check_stats,    SV.INCLUDE_STATS)    end
+  Controls.check_buffs.clickedCallback    = function() M.on_checkbox_changed(Controls.check_buffs,    SV.INCLUDE_BUFFS)    end
+  Controls.check_passives.clickedCallback = function() M.on_checkbox_changed(Controls.check_passives, SV.INCLUDE_PASSIVES) end
 
   Controls.scrollbar:SetMinMax(1, 1)
   Controls.scrollbar:SetValue(1)
@@ -47,7 +51,7 @@ function M.init()
   local w = CDescriptor.Settings.get(SV.WINDOW_W)
   local h = CDescriptor.Settings.get(SV.WINDOW_H)
   if w and h then Controls.window:SetDimensions(w, h) end
-  Controls.window:SetDimensionConstraints(380, 370, 0, 0)
+  Controls.window:SetDimensionConstraints(380, 400, 0, 0)
 end
 
 local status_pulse = nil
@@ -100,6 +104,7 @@ function M.on_generate()
     sets      = CDescriptor.Adapters.Sets,
     stats     = CDescriptor.Adapters.Stats,
     buffs     = CDescriptor.Adapters.Buffs,
+    passives  = CDescriptor.Adapters.Passives,
   }
 
   local ok, raw = pcall(CDescriptor.Extractor.extract, adapters)
@@ -109,9 +114,10 @@ function M.on_generate()
   end
 
   local config = {
-    include_sets  = ZO_CheckButton_IsChecked(Controls.check_sets),
-    include_stats = ZO_CheckButton_IsChecked(Controls.check_stats),
-    include_buffs = ZO_CheckButton_IsChecked(Controls.check_buffs),
+    include_sets     = ZO_CheckButton_IsChecked(Controls.check_sets),
+    include_stats    = ZO_CheckButton_IsChecked(Controls.check_stats),
+    include_buffs    = ZO_CheckButton_IsChecked(Controls.check_buffs),
+    include_passives = ZO_CheckButton_IsChecked(Controls.check_passives),
   }
 
   local ok2, transformed = pcall(CDescriptor.Transformer.transform, raw, config)

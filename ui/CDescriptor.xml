@@ -73,11 +73,21 @@
           </OnMouseUp>
         </Label>
 
+        <Button name="$(parent)CheckPassives" inherits="ZO_CheckButton">
+          <Anchor point="TOPLEFT" relativeTo="$(parent)CheckBuffs" relativePoint="BOTTOMLEFT" offsetY="6"/>
+        </Button>
+        <Label name="$(parent)CheckPassivesLabel" font="ZoFontGame" color="0.9,0.78,0.5,1" mouseEnabled="true">
+          <Anchor point="LEFT" relativeTo="$(parent)CheckPassives" relativePoint="RIGHT" offsetX="6"/>
+          <OnMouseUp>
+            if upInside then ZO_CheckButton_OnClicked(CDescriptorWindowCheckPassives) end
+          </OnMouseUp>
+        </Label>
+
         <!-- Divider above output -->
         <Texture name="$(parent)DividerBottom" textureFile="EsoUI/Art/Miscellaneous/horizontalDivider.dds">
           <Dimensions y="4"/>
-          <Anchor point="TOPLEFT"  relativeTo="$(parent)CheckBuffs" relativePoint="BOTTOMLEFT"  offsetX="0"   offsetY="10"/>
-          <Anchor point="TOPRIGHT" relativeTo="$(parent)CheckBuffs" relativePoint="BOTTOMRIGHT" offsetX="-20" offsetY="10"/>
+          <Anchor point="TOPLEFT"  relativeTo="$(parent)CheckPassives" relativePoint="BOTTOMLEFT"  offsetX="0"   offsetY="10"/>
+          <Anchor point="TOPRIGHT" relativeTo="$(parent)CheckPassives" relativePoint="BOTTOMRIGHT" offsetX="-20" offsetY="10"/>
           <TextureCoords top="0" bottom="1" left="0.181640625" right="0.818359375"/>
         </Texture>
 

@@ -7,9 +7,10 @@ local DEFAULTS = {
   window_y      = nil,
   window_w      = 620,
   window_h      = 530,
-  include_sets  = true,   -- ON by default
-  include_stats = false,  -- OFF by default
-  include_buffs = false,  -- OFF by default
+  include_sets     = true,   -- ON by default
+  include_stats    = false,  -- OFF by default
+  include_buffs    = false,  -- OFF by default
+  include_passives = false,  -- OFF by default
 }
 
 function M.load()

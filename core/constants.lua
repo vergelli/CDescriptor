@@ -18,6 +18,7 @@ CDescriptor.Constants = {
     CHECK_SETS      = "CDescriptorWindowCheckSets",
     CHECK_STATS     = "CDescriptorWindowCheckStats",
     CHECK_BUFFS     = "CDescriptorWindowCheckBuffs",
+    CHECK_PASSIVES  = "CDescriptorWindowCheckPassives",
   },
 
   -- UI strings
@@ -30,9 +31,10 @@ CDescriptor.Constants = {
     STATUS_DONE       = "Done.",
     STATUS_ERROR      = "Error: ",
     STATUS_COPY       = "Selected — press Ctrl+C to copy",
-    CHECK_SETS_LABEL  = "Set descriptions",
-    CHECK_STATS_LABEL = "Combat stats",
-    CHECK_BUFFS_LABEL = "Active buffs",
+    CHECK_SETS_LABEL      = "Set descriptions",
+    CHECK_STATS_LABEL     = "Combat stats",
+    CHECK_BUFFS_LABEL     = "Active buffs",
+    CHECK_PASSIVES_LABEL  = "Passive skills",
   },
 
   -- Saved variables keys
@@ -41,8 +43,9 @@ CDescriptor.Constants = {
     WINDOW_Y      = "window_y",
     WINDOW_W      = "window_w",
     WINDOW_H      = "window_h",
-    INCLUDE_SETS  = "include_sets",
-    INCLUDE_STATS = "include_stats",
-    INCLUDE_BUFFS = "include_buffs",
+    INCLUDE_SETS     = "include_sets",
+    INCLUDE_STATS    = "include_stats",
+    INCLUDE_BUFFS    = "include_buffs",
+    INCLUDE_PASSIVES = "include_passives",
   },
 }

@@ -16,6 +16,7 @@ adapters/zenimax/gear.lua
 adapters/zenimax/sets.lua
 adapters/zenimax/stats.lua
 adapters/zenimax/buffs.lua
+adapters/zenimax/passives.lua
 pipeline/extractor.lua
 pipeline/transformer.lua
 pipeline/serializer.lua
