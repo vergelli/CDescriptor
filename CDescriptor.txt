@@ -1,7 +1,8 @@
 ## Title: CDescriptor
-## Description: A module Addon that enable users to get structured information about its character
+## Description: Exports your character build as JSON — skills, gear, sets, stats and buffs. Ready to paste into an LLM or spreadsheet.
 ## Author: Federico Vergelli
-## Version: 0.1.0
+## Version: 1.0.0
+## AddOnVersion: 1
 ## APIVersion: 101049
 ## SavedVariables: CDescriptorSavedVars
 

@@ -1,5 +1,6 @@
 # CDescriptor
 
+![Version](https://img.shields.io/badge/version-1.0.0-blue)
 ![Lua](https://img.shields.io/badge/Lua-5.1-2C2D72?logo=lua&logoColor=white)
 ![ESO API](https://img.shields.io/badge/ESO%20API-101049-orange)
 ![No dependencies](https://img.shields.io/badge/dependencies-none-brightgreen)
@@ -23,14 +24,11 @@ The three optional sections are toggled with checkboxes in the window.
 1. Log in to your character.
 2. Type `/cdescriptor` or use the keybinding you set in **Options → Keybindings → CDescriptor**.
 3. Tick the sections you want, then click **Generate**.
-4. Click **Copy** — the text is selected. Press **Ctrl+C**.
+4. Click **Select** — the text is selected. Press **Ctrl+C**.
 5. Paste anywhere.
 
 ![Empty](doc/assets/empty_1.jpg)
 ![filled](doc/assets/filled_2.jpg)
-
-
-
 
 
 ## Installation
@@ -49,10 +47,11 @@ The three optional sections are toggled with checkboxes in the window.
 
 Sections that could become additional checkboxes, subject to what the ESO API actually exposes:
 
-- **PVP** — Alliance War rank and points (API confirmed available)
+- **PVP**: Alliance War rank and points
 - **Crafting professions** — skill level in each tradeskill: Blacksmithing, Clothing, Woodworking, Enchanting, Alchemy, etc.
-- **Achievements** — feasible but complex; we will see.
+- **Achievements**: feasible but complex, we will see.
+- **Output formats**: currently JSON only. _YAML_ and _Markdown_ are natural candidates. _YAML_ is more human-readable I gues, _Markdown_ could render nicely.
 
-Ideas that sound good but need investigation first: mount stats, companion info, housing. 
+Ideas that sound good but need investigation first: mount stats, companion info, housing.
 
 Contributions welcome!
