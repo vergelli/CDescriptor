@@ -14,12 +14,14 @@ function M.init()
   Controls.status    = _G[names.STATUS_LABEL]
   Controls.generate  = _G[names.GENERATE_BUTTON]
   Controls.copy      = _G[names.COPY_BUTTON]
+  Controls.clear     = _G[names.CLEAR_BUTTON]
   Controls.check_sets  = _G[names.CHECK_SETS]
   Controls.check_stats = _G[names.CHECK_STATS]
   Controls.check_buffs = _G[names.CHECK_BUFFS]
 
   Controls.generate:SetText(C.UI.GENERATE_BUTTON)
   Controls.copy:SetText(C.UI.COPY_BUTTON)
+  Controls.clear:SetText(C.UI.CLEAR_BUTTON)
   Controls.output:SetFont("ZoFontChat")
 
   -- Set checkbox labels
@@ -105,6 +107,12 @@ function M.on_generate()
   set_output(json_str)
   update_scrollbar()
   set_status(C.UI.STATUS_DONE)
+end
+
+function M.on_clear()
+  set_output("")
+  set_status(C.UI.STATUS_IDLE)
+  Controls.scrollbar:SetHidden(true)
 end
 
 function M.on_copy()

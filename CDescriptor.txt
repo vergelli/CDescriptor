@@ -18,6 +18,7 @@ adapters/zenimax/buffs.lua
 pipeline/extractor.lua
 pipeline/transformer.lua
 pipeline/serializer.lua
+bindings.xml
 ui/CDescriptor.xml
 ui/interface.lua
 CDescriptor.lua

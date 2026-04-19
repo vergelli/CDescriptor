@@ -113,6 +113,12 @@
           </OnValueChanged>
         </Slider>
 
+        <Button name="$(parent)ClearButton" inherits="ZO_DefaultButton">
+          <Dimensions x="130" y="32"/>
+          <Anchor point="BOTTOMLEFT" offsetX="20" offsetY="-14"/>
+          <OnClicked>CDescriptor.UI.on_clear()</OnClicked>
+        </Button>
+
         <Button name="$(parent)CopyButton" inherits="ZO_DefaultButton">
           <Dimensions x="130" y="32"/>
           <Anchor point="BOTTOMRIGHT" offsetX="-20" offsetY="-14"/>
