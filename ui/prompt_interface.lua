@@ -232,6 +232,10 @@ end
 
 -- ── Show / Hide ───────────────────────────────────────────────────────────────
 
+function M.set_panel_width(w)
+  if Controls.panel then Controls.panel:SetWidth(w) end
+end
+
 function M.show()
   if not Controls.panel then return end
   Controls.panel:SetHeight(PANEL_HEIGHT)

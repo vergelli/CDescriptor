@@ -3,10 +3,11 @@ local CDescriptor = CDescriptor
 
 CDescriptor.UI = {}
 
-local ZO_CheckButton_IsChecked   = ZO_CheckButton_IsChecked
-local ZO_CheckButton_SetCheckState = ZO_CheckButton_SetCheckState
-local ZO_AlphaAnimation          = ZO_AlphaAnimation
-local PlaySound                  = PlaySound
+local ZO_CheckButton_IsChecked        = ZO_CheckButton_IsChecked
+local ZO_CheckButton_SetCheckState    = ZO_CheckButton_SetCheckState
+local ZO_CheckButton_SetToggleFunction = ZO_CheckButton_SetToggleFunction
+local ZO_AlphaAnimation               = ZO_AlphaAnimation
+local PlaySound                       = PlaySound
 
 local M = CDescriptor.UI
 local C
@@ -52,12 +53,12 @@ function M.init()
   ZO_CheckButton_SetCheckState(Controls.check_prompt,   CDescriptor.Settings.get(SV.INCLUDE_PROMPT))
 
   -- Persist state on click
-  Controls.check_sets.clickedCallback     = function() M.on_checkbox_changed(Controls.check_sets,     SV.INCLUDE_SETS)     end
-  Controls.check_stats.clickedCallback    = function() M.on_checkbox_changed(Controls.check_stats,    SV.INCLUDE_STATS)    end
-  Controls.check_buffs.clickedCallback    = function() M.on_checkbox_changed(Controls.check_buffs,    SV.INCLUDE_BUFFS)    end
-  Controls.check_passives.clickedCallback = function() M.on_checkbox_changed(Controls.check_passives, SV.INCLUDE_PASSIVES) end
-  Controls.check_cp.clickedCallback       = function() M.on_checkbox_changed(Controls.check_cp,       SV.INCLUDE_CP)       end
-  Controls.check_prompt.clickedCallback   = function() M.on_prompt_checkbox_changed() end
+  ZO_CheckButton_SetToggleFunction(Controls.check_sets,     function(_, checked) M.on_checkbox_changed(SV.INCLUDE_SETS,     checked) end)
+  ZO_CheckButton_SetToggleFunction(Controls.check_stats,    function(_, checked) M.on_checkbox_changed(SV.INCLUDE_STATS,    checked) end)
+  ZO_CheckButton_SetToggleFunction(Controls.check_buffs,    function(_, checked) M.on_checkbox_changed(SV.INCLUDE_BUFFS,    checked) end)
+  ZO_CheckButton_SetToggleFunction(Controls.check_passives, function(_, checked) M.on_checkbox_changed(SV.INCLUDE_PASSIVES, checked) end)
+  ZO_CheckButton_SetToggleFunction(Controls.check_cp,       function(_, checked) M.on_checkbox_changed(SV.INCLUDE_CP,       checked) end)
+  ZO_CheckButton_SetToggleFunction(Controls.check_prompt,   function(_, checked) M.on_prompt_checkbox_changed(checked)              end)
 
   Controls.scrollbar:SetMinMax(1, 1)
   Controls.scrollbar:SetValue(1)
@@ -109,12 +110,11 @@ local function update_scrollbar()
   end
 end
 
-function M.on_checkbox_changed(btn, saved_var_key)
-  CDescriptor.Settings.set(saved_var_key, ZO_CheckButton_IsChecked(btn))
+function M.on_checkbox_changed(saved_var_key, checked)
+  CDescriptor.Settings.set(saved_var_key, checked)
 end
 
-function M.on_prompt_checkbox_changed()
-  local checked = ZO_CheckButton_IsChecked(Controls.check_prompt)
+function M.on_prompt_checkbox_changed(checked)
   CDescriptor.Settings.set(C.SAVED_VARS.INCLUDE_PROMPT, checked)
   if checked then
     Controls.window:SetDimensionConstraints(380, 600, 0, 0)
@@ -210,6 +210,7 @@ function M.on_resize_stop()
   local w, h = Controls.window:GetDimensions()
   CDescriptor.Settings.set(C.SAVED_VARS.WINDOW_W, w)
   CDescriptor.Settings.set(C.SAVED_VARS.WINDOW_H, h)
+  CDescriptor.PromptUI.set_panel_width(w - 40)
 end
 
 function M.toggle()

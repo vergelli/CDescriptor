@@ -105,8 +105,8 @@
 
         <!-- Prompt configuration panel (shown when Include Prompt is checked) -->
         <Control name="$(parent)PromptPanel" hidden="true">
-          <Anchor point="TOPLEFT"  relativeTo="$(parent)CheckPrompt" relativePoint="BOTTOMLEFT" offsetY="6"/>
-          <Anchor point="TOPRIGHT" offsetX="-20"/>
+          <Dimensions x="580"/>
+          <Anchor point="TOPLEFT" relativeTo="$(parent)CheckPrompt" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="6"/>
           <Controls>
 
             <Label name="$(parent)PatchLabel" font="ZoFontGame" color="0.9,0.78,0.5,1" text="Patch:">
