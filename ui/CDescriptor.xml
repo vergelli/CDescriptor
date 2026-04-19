@@ -29,9 +29,40 @@
           <Anchor point="LEFT" relativeTo="$(parent)GenerateButton" relativePoint="RIGHT" offsetX="12"/>
         </Label>
 
-        <!-- Output area with scrollable EditBox -->
+        <!-- Checkbox row: set descriptions (ON) | combat stats (OFF) | active buffs (OFF) -->
+        <Button name="$(parent)CheckSets" inherits="ZO_CheckButton">
+          <Anchor point="TOPLEFT" offsetX="20" offsetY="92"/>
+        </Button>
+        <Label name="$(parent)CheckSetsLabel" font="ZoFontGame" color="0.8,0.8,0.8,1" mouseEnabled="true">
+          <Anchor point="LEFT" relativeTo="$(parent)CheckSets" relativePoint="RIGHT" offsetX="6"/>
+          <OnMouseUp>
+            if upInside then ZO_CheckButton_OnClicked(CDescriptorWindowCheckSets) end
+          </OnMouseUp>
+        </Label>
+
+        <Button name="$(parent)CheckStats" inherits="ZO_CheckButton">
+          <Anchor point="TOPLEFT" offsetX="210" offsetY="92"/>
+        </Button>
+        <Label name="$(parent)CheckStatsLabel" font="ZoFontGame" color="0.8,0.8,0.8,1" mouseEnabled="true">
+          <Anchor point="LEFT" relativeTo="$(parent)CheckStats" relativePoint="RIGHT" offsetX="6"/>
+          <OnMouseUp>
+            if upInside then ZO_CheckButton_OnClicked(CDescriptorWindowCheckStats) end
+          </OnMouseUp>
+        </Label>
+
+        <Button name="$(parent)CheckBuffs" inherits="ZO_CheckButton">
+          <Anchor point="TOPLEFT" offsetX="400" offsetY="92"/>
+        </Button>
+        <Label name="$(parent)CheckBuffsLabel" font="ZoFontGame" color="0.8,0.8,0.8,1" mouseEnabled="true">
+          <Anchor point="LEFT" relativeTo="$(parent)CheckBuffs" relativePoint="RIGHT" offsetX="6"/>
+          <OnMouseUp>
+            if upInside then ZO_CheckButton_OnClicked(CDescriptorWindowCheckBuffs) end
+          </OnMouseUp>
+        </Label>
+
+        <!-- Output area: top pushed down to y=126 to make room for checkbox row -->
         <Backdrop name="$(parent)OutputBg" inherits="ZO_MultiLineEditBackdrop_Keyboard">
-          <Anchor point="TOPLEFT" offsetX="20" offsetY="96"/>
+          <Anchor point="TOPLEFT" offsetX="20" offsetY="126"/>
           <Anchor point="BOTTOMRIGHT" offsetX="-44" offsetY="-54"/>
           <Controls>
             <EditBox name="CDescriptorOutputBox" inherits="ZO_DefaultEditMultiLineForBackdrop" maxInputCharacters="100000">
@@ -46,7 +77,6 @@
           </Controls>
         </Backdrop>
 
-        <!-- Vertical scrollbar synced to EditBox -->
         <Slider name="CDescriptorScrollbar" mouseEnabled="true">
           <Dimensions x="16" y="32"/>
           <Anchor point="TOPLEFT" relativeTo="$(parent)OutputBg" relativePoint="TOPRIGHT" offsetX="4"/>
@@ -64,7 +94,6 @@
           </OnValueChanged>
         </Slider>
 
-        <!-- Copy: selects all text so user can Ctrl+C -->
         <Button name="$(parent)CopyButton" inherits="ZO_DefaultButton">
           <Dimensions x="130" y="32"/>
           <Anchor point="BOTTOMRIGHT" offsetX="-20" offsetY="-14"/>

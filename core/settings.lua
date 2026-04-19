@@ -2,7 +2,13 @@ CDescriptor = CDescriptor or {}
 CDescriptor.Settings = {}
 
 local M = CDescriptor.Settings
-local DEFAULTS = { window_x = nil, window_y = nil }
+local DEFAULTS = {
+  window_x      = nil,
+  window_y      = nil,
+  include_sets  = true,   -- ON by default
+  include_stats = false,  -- OFF by default
+  include_buffs = false,  -- OFF by default
+}
 
 function M.load()
   if CDescriptorSavedVars == nil then

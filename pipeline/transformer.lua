@@ -150,11 +150,21 @@ end
 
 -- ── Root ──────────────────────────────────────────────────────────────────
 
-function M.transform(raw)
+-- config fields (all boolean, nil treated as default):
+--   include_sets  → default true
+--   include_stats → default false
+--   include_buffs → default false
+function M.transform(raw, config)
+  config = config or {}
+  local include_sets  = config.include_sets  ~= false  -- default true
+  local include_stats = config.include_stats == true   -- default false
+  local include_buffs = config.include_buffs == true   -- default false
+
   local character = raw.character or {}
   local skills    = raw.skills or {}
-  return {
-    character   = {
+
+  local result = {
+    character    = {
       name            = character.name,
       class           = character.class,
       race            = character.race,
@@ -164,10 +174,13 @@ function M.transform(raw)
     bar_1_skills = transform_bar(skills.bar_1),
     bar_2_skills = transform_bar(skills.bar_2),
     gear         = transform_gear(raw.gear),
-    sets_buffs   = transform_sets(raw.sets),
-    stats        = transform_stats(raw.stats),
-    buffs        = transform_buffs(raw.buffs),
   }
+
+  if include_sets  then result.sets_buffs = transform_sets(raw.sets)   end
+  if include_stats then result.stats      = transform_stats(raw.stats)  end
+  if include_buffs then result.buffs      = transform_buffs(raw.buffs)  end
+
+  return result
 end
 
 CDescriptor.Transformer = M

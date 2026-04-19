@@ -2,7 +2,7 @@ CDescriptor = CDescriptor or {}
 CDescriptor.UI = {}
 
 local M = CDescriptor.UI
-local C  -- populated in M.init() to avoid referencing constants before they load
+local C
 local Controls = {}
 
 function M.init()
@@ -14,9 +14,29 @@ function M.init()
   Controls.status    = _G[names.STATUS_LABEL]
   Controls.generate  = _G[names.GENERATE_BUTTON]
   Controls.copy      = _G[names.COPY_BUTTON]
+  Controls.check_sets  = _G[names.CHECK_SETS]
+  Controls.check_stats = _G[names.CHECK_STATS]
+  Controls.check_buffs = _G[names.CHECK_BUFFS]
 
   Controls.generate:SetText(C.UI.GENERATE_BUTTON)
   Controls.copy:SetText(C.UI.COPY_BUTTON)
+
+  -- Set checkbox labels
+  _G[names.CHECK_SETS  .. "Label"]:SetText(C.UI.CHECK_SETS_LABEL)
+  _G[names.CHECK_STATS .. "Label"]:SetText(C.UI.CHECK_STATS_LABEL)
+  _G[names.CHECK_BUFFS .. "Label"]:SetText(C.UI.CHECK_BUFFS_LABEL)
+
+  -- Restore saved checkbox states
+  local SV = C.SAVED_VARS
+  ZO_CheckButton_SetCheckState(Controls.check_sets,  CDescriptor.Settings.get(SV.INCLUDE_SETS))
+  ZO_CheckButton_SetCheckState(Controls.check_stats, CDescriptor.Settings.get(SV.INCLUDE_STATS))
+  ZO_CheckButton_SetCheckState(Controls.check_buffs, CDescriptor.Settings.get(SV.INCLUDE_BUFFS))
+
+  -- Persist state on click
+  Controls.check_sets.clickedCallback  = function() M.on_checkbox_changed(Controls.check_sets,  SV.INCLUDE_SETS)  end
+  Controls.check_stats.clickedCallback = function() M.on_checkbox_changed(Controls.check_stats, SV.INCLUDE_STATS) end
+  Controls.check_buffs.clickedCallback = function() M.on_checkbox_changed(Controls.check_buffs, SV.INCLUDE_BUFFS) end
+
   Controls.scrollbar:SetMinMax(1, 1)
   Controls.scrollbar:SetValue(1)
 end
@@ -40,6 +60,10 @@ local function update_scrollbar()
   end
 end
 
+function M.on_checkbox_changed(btn, saved_var_key)
+  CDescriptor.Settings.set(saved_var_key, ZO_CheckButton_IsChecked(btn))
+end
+
 function M.on_generate()
   set_status(C.UI.STATUS_EXTRACT)
   set_output(C.UI.STATUS_IDLE)
@@ -59,7 +83,13 @@ function M.on_generate()
     return
   end
 
-  local ok2, transformed = pcall(CDescriptor.Transformer.transform, raw)
+  local config = {
+    include_sets  = ZO_CheckButton_IsChecked(Controls.check_sets),
+    include_stats = ZO_CheckButton_IsChecked(Controls.check_stats),
+    include_buffs = ZO_CheckButton_IsChecked(Controls.check_buffs),
+  }
+
+  local ok2, transformed = pcall(CDescriptor.Transformer.transform, raw, config)
   if not ok2 then
     set_status(C.UI.STATUS_ERROR .. tostring(transformed))
     return
@@ -82,12 +112,10 @@ function M.on_copy()
   set_status(C.UI.STATUS_COPY)
 end
 
--- Called from slider OnValueChanged (hardware events only).
 function M.on_scroll(value)
   Controls.output:SetTopLineIndex(math.floor(value))
 end
 
--- Called from EditBox OnMouseWheel after scrolling.
 function M.on_editbox_scroll(lineIndex)
   Controls.scrollbar:SetValue(lineIndex)
 end

@@ -14,22 +14,31 @@ CDescriptor.Constants = {
     STATUS_LABEL    = "CDescriptorWindowStatusLabel",
     GENERATE_BUTTON = "CDescriptorWindowGenerateButton",
     COPY_BUTTON     = "CDescriptorWindowCopyButton",
+    CHECK_SETS      = "CDescriptorWindowCheckSets",
+    CHECK_STATS     = "CDescriptorWindowCheckStats",
+    CHECK_BUFFS     = "CDescriptorWindowCheckBuffs",
   },
 
   -- UI strings
   UI = {
-    GENERATE_BUTTON  = "Generate",
-    COPY_BUTTON      = "Copy",
-    STATUS_IDLE      = "",
-    STATUS_EXTRACT   = "Extracting...",
-    STATUS_DONE      = "Done.",
-    STATUS_ERROR     = "Error: ",
-    STATUS_COPY      = "Selected — press Ctrl+C to copy",
+    GENERATE_BUTTON   = "Generate",
+    COPY_BUTTON       = "Copy",
+    STATUS_IDLE       = "",
+    STATUS_EXTRACT    = "Extracting...",
+    STATUS_DONE       = "Done.",
+    STATUS_ERROR      = "Error: ",
+    STATUS_COPY       = "Selected — press Ctrl+C to copy",
+    CHECK_SETS_LABEL  = "Set descriptions",
+    CHECK_STATS_LABEL = "Combat stats",
+    CHECK_BUFFS_LABEL = "Active buffs",
   },
 
   -- Saved variables keys
   SAVED_VARS = {
-    WINDOW_X = "window_x",
-    WINDOW_Y = "window_y",
+    WINDOW_X      = "window_x",
+    WINDOW_Y      = "window_y",
+    INCLUDE_SETS  = "include_sets",
+    INCLUDE_STATS = "include_stats",
+    INCLUDE_BUFFS = "include_buffs",
   },
 }
