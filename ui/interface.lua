@@ -3,11 +3,6 @@ CDescriptor.UI = {}
 
 local M = CDescriptor.UI
 
-function M.on_initialized(window)
-    CDescriptorWindowGenerateButton:SetText("Generar")
-    CDescriptorWindowCopyButton:SetText("Copy")
-end
-
 local function set_progress(value, label)
   CDescriptorWindowProgressBar:SetValue(value)
   CDescriptorWindowProgressLabel:SetText(label or "")

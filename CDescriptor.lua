@@ -13,6 +13,8 @@ end
 local function on_addon_loaded()
   CDescriptor.log("Cargado v" .. CDescriptor.version .. " — /cdescriptor para abrir")
   CDescriptor.Settings.load()
+  CDescriptorWindowGenerateButton:SetText("Generar")
+  CDescriptorWindowCopyButton:SetText("Copy")
 
   -- Restore window position if saved
   local x = CDescriptor.Settings.get("window_x")

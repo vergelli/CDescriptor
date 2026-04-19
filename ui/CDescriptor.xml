@@ -4,7 +4,6 @@
       <Anchor point="CENTER"/>
       <Dimensions x="620" y="530"/>
       <OnMoveStop>CDescriptor.UI.on_move_stop()</OnMoveStop>
-      <OnInitialized>CDescriptor.UI.on_initialized(self)</OnInitialized>
       <Controls>
 
         <Backdrop name="$(parent)Bg" inherits="ZO_DefaultBackdrop">
@@ -12,7 +11,7 @@
         </Backdrop>
 
         <!-- Titulo -->
-        <Label name="$(parent)Title" font="ZoFontHeader" color="1,0.8,0,1" text="CDescriptor">
+        <Label name="$(parent)Title" font="ZoFontHeader" color="1,0.8,0,1" text="Character Descriptor">
           <Anchor point="TOP" offsetY="14"/>
         </Label>
 
