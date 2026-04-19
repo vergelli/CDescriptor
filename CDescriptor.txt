@@ -1,0 +1,20 @@
+## Title: CDescriptor
+## Description: Character build exporter to JSON
+## Author: federicocusot
+## Version: 0.1.0
+## APIVersion: 101049
+## SavedVariables: CDescriptorSavedVars
+
+lib/json.lua
+core/events.lua
+core/settings.lua
+adapters/zenimax/character.lua
+adapters/zenimax/skills.lua
+adapters/zenimax/gear.lua
+adapters/zenimax/sets.lua
+pipeline/extractor.lua
+pipeline/transformer.lua
+pipeline/serializer.lua
+ui/CDescriptor.xml
+ui/interface.lua
+CDescriptor.lua
