@@ -6,12 +6,14 @@
       <OnMoveStop>CDescriptor.UI.on_move_stop()</OnMoveStop>
       <Controls>
 
+        <!-- Main window backdrop -->
         <Backdrop name="$(parent)Bg" inherits="ZO_DefaultBackdrop">
           <AnchorFill/>
         </Backdrop>
 
-        <Label name="$(parent)Title" font="ZoFontHeader" color="1,0.8,0,1" text="Character Descriptor">
-          <Anchor point="TOP" offsetY="14"/>
+        <!-- Title — ZoFontWindowTitle (30px bold) -->
+        <Label name="$(parent)Title" font="ZoFontWindowTitle" color="1,0.8,0,1" text="Character Descriptor">
+          <Anchor point="TOP" offsetY="12"/>
         </Label>
 
         <Button name="$(parent)CloseButton" inherits="ZO_CloseButton">
@@ -19,9 +21,18 @@
           <OnClicked>CDescriptorWindow:SetHidden(true)</OnClicked>
         </Button>
 
+        <!-- Divider under title -->
+        <Texture name="$(parent)DividerTop" textureFile="EsoUI/Art/Miscellaneous/horizontalDivider.dds">
+          <Dimensions y="4"/>
+          <Anchor point="TOPLEFT"  offsetX="20" offsetY="50"/>
+          <Anchor point="TOPRIGHT" offsetX="-20" offsetY="50"/>
+          <TextureCoords top="0" bottom="1" left="0.181640625" right="0.818359375"/>
+        </Texture>
+
+        <!-- Controls: generate button + status -->
         <Button name="$(parent)GenerateButton" inherits="ZO_DefaultButton">
           <Dimensions x="130" y="32"/>
-          <Anchor point="TOPLEFT" offsetX="20" offsetY="50"/>
+          <Anchor point="TOPLEFT" offsetX="20" offsetY="62"/>
           <OnClicked>CDescriptor.UI.on_generate()</OnClicked>
         </Button>
 
@@ -29,11 +40,11 @@
           <Anchor point="LEFT" relativeTo="$(parent)GenerateButton" relativePoint="RIGHT" offsetX="12"/>
         </Label>
 
-        <!-- Checkbox row: set descriptions (ON) | combat stats (OFF) | active buffs (OFF) -->
+        <!-- Checkbox row — labels in ESO amber -->
         <Button name="$(parent)CheckSets" inherits="ZO_CheckButton">
-          <Anchor point="TOPLEFT" offsetX="20" offsetY="92"/>
+          <Anchor point="TOPLEFT" offsetX="20" offsetY="106"/>
         </Button>
-        <Label name="$(parent)CheckSetsLabel" font="ZoFontGame" color="0.8,0.8,0.8,1" mouseEnabled="true">
+        <Label name="$(parent)CheckSetsLabel" font="ZoFontGame" color="0.9,0.78,0.5,1" mouseEnabled="true">
           <Anchor point="LEFT" relativeTo="$(parent)CheckSets" relativePoint="RIGHT" offsetX="6"/>
           <OnMouseUp>
             if upInside then ZO_CheckButton_OnClicked(CDescriptorWindowCheckSets) end
@@ -41,9 +52,9 @@
         </Label>
 
         <Button name="$(parent)CheckStats" inherits="ZO_CheckButton">
-          <Anchor point="TOPLEFT" offsetX="210" offsetY="92"/>
+          <Anchor point="TOPLEFT" offsetX="222" offsetY="106"/>
         </Button>
-        <Label name="$(parent)CheckStatsLabel" font="ZoFontGame" color="0.8,0.8,0.8,1" mouseEnabled="true">
+        <Label name="$(parent)CheckStatsLabel" font="ZoFontGame" color="0.9,0.78,0.5,1" mouseEnabled="true">
           <Anchor point="LEFT" relativeTo="$(parent)CheckStats" relativePoint="RIGHT" offsetX="6"/>
           <OnMouseUp>
             if upInside then ZO_CheckButton_OnClicked(CDescriptorWindowCheckStats) end
@@ -51,18 +62,26 @@
         </Label>
 
         <Button name="$(parent)CheckBuffs" inherits="ZO_CheckButton">
-          <Anchor point="TOPLEFT" offsetX="400" offsetY="92"/>
+          <Anchor point="TOPLEFT" offsetX="408" offsetY="106"/>
         </Button>
-        <Label name="$(parent)CheckBuffsLabel" font="ZoFontGame" color="0.8,0.8,0.8,1" mouseEnabled="true">
+        <Label name="$(parent)CheckBuffsLabel" font="ZoFontGame" color="0.9,0.78,0.5,1" mouseEnabled="true">
           <Anchor point="LEFT" relativeTo="$(parent)CheckBuffs" relativePoint="RIGHT" offsetX="6"/>
           <OnMouseUp>
             if upInside then ZO_CheckButton_OnClicked(CDescriptorWindowCheckBuffs) end
           </OnMouseUp>
         </Label>
 
-        <!-- Output area: top pushed down to y=126 to make room for checkbox row -->
+        <!-- Divider above output -->
+        <Texture name="$(parent)DividerBottom" textureFile="EsoUI/Art/Miscellaneous/horizontalDivider.dds">
+          <Dimensions y="4"/>
+          <Anchor point="TOPLEFT"  offsetX="20" offsetY="130"/>
+          <Anchor point="TOPRIGHT" offsetX="-20" offsetY="130"/>
+          <TextureCoords top="0" bottom="1" left="0.181640625" right="0.818359375"/>
+        </Texture>
+
+        <!-- Output area — font set to ZoFontChat in interface.lua -->
         <Backdrop name="$(parent)OutputBg" inherits="ZO_MultiLineEditBackdrop_Keyboard">
-          <Anchor point="TOPLEFT" offsetX="20" offsetY="126"/>
+          <Anchor point="TOPLEFT" offsetX="20" offsetY="142"/>
           <Anchor point="BOTTOMRIGHT" offsetX="-44" offsetY="-54"/>
           <Controls>
             <EditBox name="CDescriptorOutputBox" inherits="ZO_DefaultEditMultiLineForBackdrop" maxInputCharacters="100000">
@@ -79,7 +98,7 @@
 
         <Slider name="CDescriptorScrollbar" mouseEnabled="true">
           <Dimensions x="16" y="32"/>
-          <Anchor point="TOPLEFT" relativeTo="$(parent)OutputBg" relativePoint="TOPRIGHT" offsetX="4"/>
+          <Anchor point="TOPLEFT"  relativeTo="$(parent)OutputBg" relativePoint="TOPRIGHT"    offsetX="4"/>
           <Anchor point="BOTTOMLEFT" relativeTo="$(parent)OutputBg" relativePoint="BOTTOMRIGHT" offsetX="4"/>
           <ThumbTexture textureFile="EsoUI/Art/Miscellaneous/scrollbox_elevator.dds"
                         disabledTextureFile="EsoUI/Art/Miscellaneous/scrollbox_elevator_disabled.dds"

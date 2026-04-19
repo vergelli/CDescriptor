@@ -20,6 +20,7 @@ function M.init()
 
   Controls.generate:SetText(C.UI.GENERATE_BUTTON)
   Controls.copy:SetText(C.UI.COPY_BUTTON)
+  Controls.output:SetFont("ZoFontChat")
 
   -- Set checkbox labels
   _G[names.CHECK_SETS  .. "Label"]:SetText(C.UI.CHECK_SETS_LABEL)
