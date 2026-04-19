@@ -12,6 +12,15 @@ local DEFAULTS = {
   include_buffs    = false,  -- OFF by default
   include_passives = false,  -- OFF by default
   include_cp       = false,  -- OFF by default
+  include_prompt   = false,  -- OFF by default
+  prompt_patch     = "",
+  prompt_cat       = "",
+  prompt_sub       = "",
+  prompt_diff      = "",
+  prompt_role      = "",
+  prompt_custom    = nil,
+  prompt_win_x     = nil,
+  prompt_win_y     = nil,
 }
 
 function M.load()

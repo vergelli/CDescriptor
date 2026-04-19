@@ -2,7 +2,7 @@ CDescriptor = CDescriptor or {}
 
 CDescriptor.Constants = {
   ADDON_NAME    = "CDescriptor",
-  VERSION       = "0.1.0",
+  VERSION       = "1.2.0",
   SLASH_COMMAND = "/cdescriptor",
   DEBUG         = false,
 
@@ -20,6 +20,15 @@ CDescriptor.Constants = {
     CHECK_BUFFS     = "CDescriptorWindowCheckBuffs",
     CHECK_PASSIVES  = "CDescriptorWindowCheckPassives",
     CHECK_CP        = "CDescriptorWindowCheckCp",
+    CHECK_PROMPT    = "CDescriptorWindowCheckPrompt",
+    PROMPT_WINDOW       = "CDescriptorPromptWindow",
+    PROMPT_PATCH        = "CDescriptorPromptPatch",
+    PROMPT_CONTENT_CAT  = "CDescriptorPromptContentCat",
+    PROMPT_CONTENT_SUB  = "CDescriptorPromptContentSub",
+    PROMPT_CONTENT_DIFF = "CDescriptorPromptContentDiff",
+    PROMPT_ROLE         = "CDescriptorPromptRole",
+    PROMPT_WARN_LABEL   = "CDescriptorPromptWarnLabel",
+    PROMPT_TEXT         = "CDescriptorPromptText",
   },
 
   -- UI strings
@@ -37,6 +46,7 @@ CDescriptor.Constants = {
     CHECK_BUFFS_LABEL     = "Active buffs",
     CHECK_PASSIVES_LABEL  = "Passive skills",
     CHECK_CP_LABEL        = "Champion points",
+    CHECK_PROMPT_LABEL    = "Include prompt",
   },
 
   -- Saved variables keys
@@ -50,5 +60,14 @@ CDescriptor.Constants = {
     INCLUDE_BUFFS    = "include_buffs",
     INCLUDE_PASSIVES = "include_passives",
     INCLUDE_CP       = "include_cp",
+    INCLUDE_PROMPT   = "include_prompt",
+    PROMPT_PATCH     = "prompt_patch",
+    PROMPT_CAT       = "prompt_cat",
+    PROMPT_SUB       = "prompt_sub",
+    PROMPT_DIFF      = "prompt_diff",
+    PROMPT_ROLE      = "prompt_role",
+    PROMPT_CUSTOM    = "prompt_custom",
+    PROMPT_WIN_X     = "prompt_win_x",
+    PROMPT_WIN_Y     = "prompt_win_y",
   },
 }

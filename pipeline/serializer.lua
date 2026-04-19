@@ -4,10 +4,14 @@ CDescriptor = CDescriptor or {}
 
 local M = {}
 
-function M.serialize(data)
+function M.serialize(data, prompt_text)
   local json = CDescriptor.JSON
   assert(json, "CDescriptor.JSON not loaded")
-  return json.encode(data)
+  local json_str = json.encode(data)
+  if prompt_text and prompt_text ~= "" then
+    return prompt_text .. "\n\n" .. json_str
+  end
+  return json_str
 end
 
 CDescriptor.Serializer = M

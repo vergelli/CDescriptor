@@ -20,6 +20,7 @@ function M.init()
   Controls.check_buffs    = _G[names.CHECK_BUFFS]
   Controls.check_passives = _G[names.CHECK_PASSIVES]
   Controls.check_cp       = _G[names.CHECK_CP]
+  Controls.check_prompt   = _G[names.CHECK_PROMPT]
 
   Controls.generate:SetText(C.UI.GENERATE_BUTTON)
   Controls.copy:SetText(C.UI.COPY_BUTTON)
@@ -32,6 +33,7 @@ function M.init()
   _G[names.CHECK_BUFFS    .. "Label"]:SetText(C.UI.CHECK_BUFFS_LABEL)
   _G[names.CHECK_PASSIVES .. "Label"]:SetText(C.UI.CHECK_PASSIVES_LABEL)
   _G[names.CHECK_CP       .. "Label"]:SetText(C.UI.CHECK_CP_LABEL)
+  _G[names.CHECK_PROMPT   .. "Label"]:SetText(C.UI.CHECK_PROMPT_LABEL)
 
   -- Restore saved checkbox states
   local SV = C.SAVED_VARS
@@ -40,6 +42,7 @@ function M.init()
   ZO_CheckButton_SetCheckState(Controls.check_buffs,    CDescriptor.Settings.get(SV.INCLUDE_BUFFS))
   ZO_CheckButton_SetCheckState(Controls.check_passives, CDescriptor.Settings.get(SV.INCLUDE_PASSIVES))
   ZO_CheckButton_SetCheckState(Controls.check_cp,       CDescriptor.Settings.get(SV.INCLUDE_CP))
+  ZO_CheckButton_SetCheckState(Controls.check_prompt,   CDescriptor.Settings.get(SV.INCLUDE_PROMPT))
 
   -- Persist state on click
   Controls.check_sets.clickedCallback     = function() M.on_checkbox_changed(Controls.check_sets,     SV.INCLUDE_SETS)     end
@@ -47,15 +50,21 @@ function M.init()
   Controls.check_buffs.clickedCallback    = function() M.on_checkbox_changed(Controls.check_buffs,    SV.INCLUDE_BUFFS)    end
   Controls.check_passives.clickedCallback = function() M.on_checkbox_changed(Controls.check_passives, SV.INCLUDE_PASSIVES) end
   Controls.check_cp.clickedCallback       = function() M.on_checkbox_changed(Controls.check_cp,       SV.INCLUDE_CP)       end
+  Controls.check_prompt.clickedCallback   = function() M.on_prompt_checkbox_changed() end
 
   Controls.scrollbar:SetMinMax(1, 1)
   Controls.scrollbar:SetValue(1)
 
-  local SV = C.SAVED_VARS
   local w = CDescriptor.Settings.get(SV.WINDOW_W)
   local h = CDescriptor.Settings.get(SV.WINDOW_H)
   if w and h then Controls.window:SetDimensions(w, h) end
-  Controls.window:SetDimensionConstraints(380, 430, 0, 0)
+  Controls.window:SetDimensionConstraints(380, 460, 0, 0)
+
+  CDescriptor.PromptUI.init()
+
+  if CDescriptor.Settings.get(SV.INCLUDE_PROMPT) then
+    CDescriptor.PromptUI.show()
+  end
 end
 
 local status_pulse = nil
@@ -96,6 +105,16 @@ function M.on_checkbox_changed(btn, saved_var_key)
   CDescriptor.Settings.set(saved_var_key, ZO_CheckButton_IsChecked(btn))
 end
 
+function M.on_prompt_checkbox_changed()
+  local checked = ZO_CheckButton_IsChecked(Controls.check_prompt)
+  CDescriptor.Settings.set(C.SAVED_VARS.INCLUDE_PROMPT, checked)
+  if checked then
+    CDescriptor.PromptUI.show()
+  else
+    CDescriptor.PromptUI.hide()
+  end
+end
+
 function M.on_generate()
   PlaySound(SOUNDS.DIALOG_ACCEPT)
   set_status(C.UI.STATUS_EXTRACT)
@@ -132,13 +151,19 @@ function M.on_generate()
     return
   end
 
-  local ok3, json_str = pcall(CDescriptor.Serializer.serialize, transformed)
+  local prompt_text = nil
+  if ZO_CheckButton_IsChecked(Controls.check_prompt) then
+    local settings = CDescriptor.PromptUI.build_prompt_settings()
+    prompt_text = CDescriptor.Prompt.build_prompt(settings)
+  end
+
+  local ok3, output_str = pcall(CDescriptor.Serializer.serialize, transformed, prompt_text)
   if not ok3 then
-    set_status(C.UI.STATUS_ERROR .. tostring(json_str))
+    set_status(C.UI.STATUS_ERROR .. tostring(output_str))
     return
   end
 
-  set_output(json_str)
+  set_output(output_str)
   update_scrollbar()
   set_status(C.UI.STATUS_DONE)
 end
