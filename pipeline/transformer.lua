@@ -133,19 +133,14 @@ local function transform_buffs(buffs)
   if not buffs then return {} end
   local out = {}
   for _, b in ipairs(buffs) do
-    local entry = { name = b.name }
-    if b.description then
-      entry.description = strip_markup(b.description)
-    end
-    if b.duration_remaining ~= nil then
-      entry.duration_remaining = b.duration_remaining
-    end
-    if b.stacks then
-      entry.stacks = b.stacks
-    end
-    if not b.cast_by_player then
-      entry.source = "external"
-    end
+    -- name first, description second — order matters for readability
+    local desc = b.description and strip_markup(b.description) or nil
+    local entry = {
+      name        = b.name,
+      description = desc,
+      stacks      = b.stacks,
+      source      = (not b.cast_by_player) and "external" or nil,
+    }
     out[#out + 1] = entry
   end
   return out
