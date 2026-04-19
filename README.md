@@ -1,9 +1,10 @@
 # CDescriptor
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue)
+![Version](https://img.shields.io/badge/version-1.2.1-blue)
 ![Lua](https://img.shields.io/badge/Lua-5.1-2C2D72?logo=lua&logoColor=white)
 ![ESO API](https://img.shields.io/badge/ESO%20API-101049-orange)
 ![No dependencies](https://img.shields.io/badge/dependencies-none-brightgreen)
+![License](https://img.shields.io/badge/license-MIT-green)
 
 A small Elder Scrolls Online addon that exports your character build as JSON, ready to paste into an LLM, a spreadsheet, or wherever you need it.
 

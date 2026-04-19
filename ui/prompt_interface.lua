@@ -23,6 +23,19 @@ local CONTENT_TYPES = {
   ["PvP:Battlegrounds"]               = "PvP instanced (Battlegrounds).",
 }
 
+local LANGUAGES = {
+  { label = "English",    value = "English."              },
+  { label = "Español",    value = "Spanish."              },
+  { label = "Français",   value = "French."               },
+  { label = "Deutsch",    value = "German."               },
+  { label = "Italiano",   value = "Italian."              },
+  { label = "Português",  value = "Portuguese."           },
+  { label = "日本語",      value = "Japanese."             },
+  { label = "한국어",      value = "Korean."               },
+  { label = "中文",        value = "Chinese (Simplified)." },
+  { label = "Русский",    value = "Russian."              },
+}
+
 local ROLE_TYPES = {
   [""]        = "Full analysis: damage, survivability, and support.",
   ["DPS"]     = "Prioritize maximizing damage output.",
@@ -55,6 +68,14 @@ local function get_content_type_str()
            or nil
   if not key then return "Infer from the build data provided." end
   return CONTENT_TYPES[key] or "Infer from the build data provided."
+end
+
+local function get_language_str()
+  local saved = sv(C.SAVED_VARS.PROMPT_LANG) or "English"
+  for _, lang in ipairs(LANGUAGES) do
+    if lang.label == saved then return lang.value end
+  end
+  return "English."
 end
 
 local function get_role_str()
@@ -150,7 +171,9 @@ function M.toggle_edit()
   Controls.edit_btn:SetText(editing_manually and "Hide prompt text" or "Edit manually")
   if editing_manually then
     local custom = sv(C.SAVED_VARS.PROMPT_CUSTOM)
-    Controls.prompt_text:SetText(custom and custom ~= "" and custom or CDescriptor.Prompt.DEFAULT_PROMPT)
+    -- Show saved custom prompt if it exists; otherwise leave empty so the
+    -- user writes from scratch rather than editing the internal default.
+    Controls.prompt_text:SetText(custom and custom ~= "" and custom or "")
   end
 end
 
@@ -185,6 +208,7 @@ function M.init()
 
   Controls.window       = _G[names.PROMPT_WINDOW]
   Controls.patch_input  = _G[names.PROMPT_PATCH]
+  Controls.lang         = _G[names.PROMPT_LANG]
   Controls.content_cat  = _G[names.PROMPT_CONTENT_CAT]
   Controls.content_sub  = _G[names.PROMPT_CONTENT_SUB]
   Controls.content_diff = _G[names.PROMPT_CONTENT_DIFF]
@@ -203,6 +227,18 @@ function M.init()
 
   -- Restore patch input
   Controls.patch_input:SetText(sv(SV.PROMPT_PATCH) or "")
+
+  -- Populate language combo
+  local lang_combo = combo(Controls.lang)
+  lang_combo:SetSortsItems(false)
+  for _, lang in ipairs(LANGUAGES) do
+    local label = lang.label
+    lang_combo:AddItem(lang_combo:CreateItemEntry(label, function()
+      sv_set(SV.PROMPT_LANG, label)
+    end))
+  end
+  local saved_lang = sv(SV.PROMPT_LANG) or "English"
+  Controls.lang:GetNamedChild("SelectedItemText"):SetText(saved_lang)
 
   -- Populate category combo
   local cat_combo = combo(Controls.content_cat)
@@ -288,5 +324,6 @@ function M.build_prompt_settings()
     patch          = sv(SV.PROMPT_PATCH) or "",
     content_type   = get_content_type_str(),
     analysis_focus = get_role_str(),
+    language       = get_language_str(),
   }
 end

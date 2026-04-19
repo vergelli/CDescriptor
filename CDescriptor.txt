@@ -1,13 +1,14 @@
 ## Title: CDescriptor
 ## Description: Exports your character build as JSON — skills, gear, sets, stats and buffs. Ready to paste into an LLM or spreadsheet.
 ## Author: Federico Vergelli
-## Version: 1.2.0
-## AddOnVersion: 2
+## Version: 1.2.1
+## AddOnVersion: 3
 ## APIVersion: 101049
 ## SavedVariables: CDescriptorSavedVars
 
 lib/json.lua
 core/constants.lua
+core/key_orders.lua
 core/events.lua
 core/settings.lua
 core/prompt.lua

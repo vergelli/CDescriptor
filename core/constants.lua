@@ -2,7 +2,7 @@ CDescriptor = CDescriptor or {}
 
 CDescriptor.Constants = {
   ADDON_NAME    = "CDescriptor",
-  VERSION       = "1.2.0",
+  VERSION       = "1.2.1",
   SLASH_COMMAND = "/cdescriptor",
   DEBUG         = false,
 
@@ -29,6 +29,7 @@ CDescriptor.Constants = {
     PROMPT_ROLE         = "CDescriptorPromptRole",
     PROMPT_WARN_LABEL   = "CDescriptorPromptWarnLabel",
     PROMPT_TEXT         = "CDescriptorPromptText",
+    PROMPT_LANG         = "CDescriptorPromptLang",
   },
 
   -- UI strings
@@ -67,6 +68,7 @@ CDescriptor.Constants = {
     PROMPT_DIFF      = "prompt_diff",
     PROMPT_ROLE      = "prompt_role",
     PROMPT_CUSTOM    = "prompt_custom",
+    PROMPT_LANG      = "prompt_lang",
     PROMPT_WIN_X     = "prompt_win_x",
     PROMPT_WIN_Y     = "prompt_win_y",
   },

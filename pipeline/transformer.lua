@@ -7,6 +7,7 @@
 CDescriptor = CDescriptor or {}
 
 local M = {}
+local KO = CDescriptor.KeyOrders  -- populated by core/key_orders.lua before this runs
 
 local SLOT_LABELS = { "1", "2", "3", "4", "5" }
 
@@ -27,10 +28,10 @@ local function format_skill_slot(slot_data)
     name = name .. " (Ultimate)"
   end
   if slot_data.scripts and next(slot_data.scripts) then
-    local clean_scripts = { __key_order = { "a", "b", "c" } }
+    local clean_scripts = { __key_order = KO.SCRIPTS }
     for label, s in pairs(slot_data.scripts) do
       clean_scripts[label] = {
-        __key_order = { "name", "description" },
+        __key_order = KO.SCRIPT_ENTRY,
         name        = strip_markup(s.name),
         description = strip_markup(s.description),
       }
@@ -42,7 +43,7 @@ end
 
 local function transform_bar(bar_slots)
   if not bar_slots then return {} end
-  local out = { __key_order = { "1", "2", "3", "4", "5", "R" } }
+  local out = { __key_order = KO.BAR }
   for i = 1, 5 do
     local entry = format_skill_slot(bar_slots[i])
     if entry ~= nil then out[SLOT_LABELS[i]] = entry end
@@ -130,7 +131,7 @@ local function transform_sets(sets)
       clean_bonuses[#clean_bonuses + 1] = strip_markup(b)
     end
     out[name] = {
-      __key_order    = { "bonuses", "count_equipped" },
+      __key_order    = KO.SET_ENTRY,
       bonuses        = clean_bonuses,
       count_equipped = data.count_equipped,
     }
@@ -145,7 +146,7 @@ local function transform_passives(passives)
   local out = {}
   for _, p in ipairs(passives) do
     local entry = {
-      __key_order = { "name", "description", "skill_line", "rank" },
+      __key_order = KO.PASSIVE_ENTRY,
       name        = p.name,
       description = p.description and strip_markup(p.description) or nil,
       skill_line  = p.skill_line,
@@ -172,7 +173,7 @@ local function transform_buffs(buffs)
     -- name first, description second — order matters for readability
     local desc = b.description and strip_markup(b.description) or nil
     local entry = {
-      __key_order = { "name", "description", "stacks", "source" },
+      __key_order = KO.BUFF_ENTRY,
       name        = b.name,
       description = desc,
       stacks      = b.stacks,
@@ -192,7 +193,7 @@ local function transform_champion_points(cp)
     local slottable = {}
     for _, entry in ipairs(discipline_data.slottable or {}) do
       slottable[#slottable + 1] = {
-        __key_order = { "name", "points" },
+        __key_order = KO.CP_SKILL_ENTRY,
         name   = entry.name,
         points = entry.points,
       }
@@ -200,13 +201,13 @@ local function transform_champion_points(cp)
     local passive = {}
     for _, entry in ipairs(discipline_data.passive or {}) do
       passive[#passive + 1] = {
-        __key_order = { "name", "points" },
+        __key_order = KO.CP_SKILL_ENTRY,
         name   = entry.name,
         points = entry.points,
       }
     end
     out[discipline_name] = {
-      __key_order = { "slottable", "passive" },
+      __key_order = KO.CP_DISCIPLINE,
       slottable = slottable,
       passive   = passive,
     }
@@ -234,7 +235,7 @@ function M.transform(raw, config)
   local skills    = raw.skills or {}
 
   local result = {
-    __key_order  = { "character", "bar_1_skills", "bar_2_skills", "gear", "sets_buffs", "stats", "buffs", "passive_skills", "champion_points" },
+    __key_order  = KO.ROOT,
     character    = {
       name            = character.name,
       class           = character.class,

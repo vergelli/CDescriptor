@@ -20,12 +20,17 @@ local function get_set_data(link)
   local has_set, set_name, num_bonuses, num_normal, _, _, num_perfected = GetItemLinkSetInfo(link, true)
   if not has_set or num_bonuses == 0 then return nil, nil, nil end
 
-  local bonuses = {}
+  local raw_bonuses = {}
   for i = 1, num_bonuses do
-    local _, desc = GetItemLinkSetBonusInfo(link, true, i)
+    local num_required, desc = GetItemLinkSetBonusInfo(link, true, i)
     if desc and desc ~= "" then
-      bonuses[#bonuses + 1] = desc
+      raw_bonuses[#raw_bonuses + 1] = { required = num_required, desc = desc }
     end
+  end
+  table.sort(raw_bonuses, function(a, b) return a.required < b.required end)
+  local bonuses = {}
+  for _, entry in ipairs(raw_bonuses) do
+    bonuses[#bonuses + 1] = entry.desc
   end
   local count = (num_normal or 0) + (num_perfected or 0)
   return set_name, bonuses, count

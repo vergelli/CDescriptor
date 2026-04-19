@@ -2,7 +2,7 @@
   <Controls>
     <TopLevelControl name="CDescriptorPromptWindow" hidden="true" clampedToScreen="true" movable="true" mouseEnabled="true">
       <Anchor point="TOPLEFT" relativeTo="CDescriptorWindow" relativePoint="TOPRIGHT" offsetX="10"/>
-      <Dimensions x="480" y="300"/>
+      <Dimensions x="480" y="340"/>
       <OnMoveStop>CDescriptor.PromptUI.on_move_stop()</OnMoveStop>
       <Controls>
 
@@ -38,9 +38,18 @@
           <OnEnter>CDescriptor.PromptUI.on_patch_changed()</OnEnter>
         </EditBox>
 
+        <!-- Language row -->
+        <Label name="$(parent)LangLabel" font="ZoFontGame" color="0.9,0.78,0.5,1" text="Language:">
+          <Anchor point="TOPLEFT" offsetX="20" offsetY="106"/>
+        </Label>
+        <Control name="CDescriptorPromptLang" inherits="ZO_ComboBox">
+          <Dimensions x="160" y="26"/>
+          <Anchor point="LEFT" relativeTo="$(parent)LangLabel" relativePoint="RIGHT" offsetX="10"/>
+        </Control>
+
         <!-- Content row -->
         <Label name="$(parent)ContentLabel" font="ZoFontGame" color="0.9,0.78,0.5,1" text="Content:">
-          <Anchor point="TOPLEFT" offsetX="20" offsetY="106"/>
+          <Anchor point="TOPLEFT" offsetX="20" offsetY="144"/>
         </Label>
         <Control name="CDescriptorPromptContentCat" inherits="ZO_ComboBox">
           <Dimensions x="100" y="26"/>
@@ -57,7 +66,7 @@
 
         <!-- Role row -->
         <Label name="$(parent)RoleLabel" font="ZoFontGame" color="0.9,0.78,0.5,1" text="Role:">
-          <Anchor point="TOPLEFT" offsetX="20" offsetY="144"/>
+          <Anchor point="TOPLEFT" offsetX="20" offsetY="182"/>
         </Label>
         <Control name="CDescriptorPromptRole" inherits="ZO_ComboBox">
           <Dimensions x="200" y="26"/>
@@ -67,15 +76,15 @@
         <!-- Divider -->
         <Texture name="$(parent)DividerMid" textureFile="EsoUI/Art/Miscellaneous/horizontalDivider.dds">
           <Dimensions y="4"/>
-          <Anchor point="TOPLEFT"  offsetX="20" offsetY="182"/>
-          <Anchor point="TOPRIGHT" offsetX="-20" offsetY="182"/>
+          <Anchor point="TOPLEFT"  offsetX="20" offsetY="220"/>
+          <Anchor point="TOPRIGHT" offsetX="-20" offsetY="220"/>
           <TextureCoords top="0" bottom="1" left="0.181640625" right="0.818359375"/>
         </Texture>
 
         <!-- Warning label (hidden by default) -->
         <Label name="CDescriptorPromptWarnLabel" font="ZoFontGameSmall" color="1,0.7,0,1" text="" wrapMode="ELLIPSIS">
-          <Anchor point="TOPLEFT"  offsetX="20" offsetY="194"/>
-          <Anchor point="TOPRIGHT" offsetX="-20" offsetY="194"/>
+          <Anchor point="TOPLEFT"  offsetX="20" offsetY="232"/>
+          <Anchor point="TOPRIGHT" offsetX="-20" offsetY="232"/>
         </Label>
 
         <!-- Buttons row -->
@@ -92,7 +101,7 @@
 
         <!-- Prompt text edit area (shown when editing manually) -->
         <Backdrop name="$(parent)TextBg" inherits="ZO_MultiLineEditBackdrop_Keyboard" hidden="true">
-          <Anchor point="TOPLEFT"     offsetX="20"  offsetY="210"/>
+          <Anchor point="TOPLEFT"     offsetX="20"  offsetY="248"/>
           <Anchor point="BOTTOMRIGHT" offsetX="-20" offsetY="-54"/>
           <Controls>
             <EditBox name="CDescriptorPromptText" inherits="ZO_DefaultEditMultiLineForBackdrop" maxInputCharacters="8000">

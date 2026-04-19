@@ -39,6 +39,7 @@ or skill descriptions, as these change frequently.
 Current patch: {{PATCH}}
 Content type: {{CONTENT_TYPE}}
 Analysis focus: {{ANALYSIS_FOCUS}}
+Respond in: {{LANGUAGE}}
 
 Focus on:
 - Infer the intended role and content type from the skills, sets, and stats
@@ -56,7 +57,7 @@ Focus on:
 
 M.DEFAULT_PROMPT = DEFAULT_PROMPT
 
-local PLACEHOLDERS = { "{{PATCH}}", "{{CONTENT_TYPE}}", "{{ANALYSIS_FOCUS}}" }
+local PLACEHOLDERS = { "{{PATCH}}", "{{CONTENT_TYPE}}", "{{ANALYSIS_FOCUS}}", "{{LANGUAGE}}" }
 
 function M.build_prompt(settings)
   local prompt = (settings.custom_prompt and settings.custom_prompt ~= "") and settings.custom_prompt or DEFAULT_PROMPT
@@ -66,6 +67,8 @@ function M.build_prompt(settings)
     settings.content_type or "Infer from the build data provided.")
   prompt = prompt:gsub("{{ANALYSIS_FOCUS}}",
     settings.analysis_focus or "Full analysis: damage, survivability, and support.")
+  prompt = prompt:gsub("{{LANGUAGE}}",
+    settings.language or "English.")
   return prompt
 end
 
