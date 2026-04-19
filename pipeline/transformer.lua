@@ -26,7 +26,15 @@ local function format_skill_slot(slot_data)
     name = name .. " (Ultimate)"
   end
   if slot_data.scripts and next(slot_data.scripts) then
-    return { name = name, scripts = slot_data.scripts }
+    local clean_scripts = {}
+    for label, s in pairs(slot_data.scripts) do
+      clean_scripts[label] = {
+        __key_order = { "name", "description" },
+        name        = strip_markup(s.name),
+        description = strip_markup(s.description),
+      }
+    end
+    return { name = name, scripts = clean_scripts }
   end
   return name
 end
@@ -164,6 +172,7 @@ function M.transform(raw, config)
   local skills    = raw.skills or {}
 
   local result = {
+    __key_order  = { "character", "bar_1_skills", "bar_2_skills", "gear", "sets_buffs", "stats", "buffs" },
     character    = {
       name            = character.name,
       class           = character.class,
