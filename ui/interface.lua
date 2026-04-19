@@ -19,6 +19,7 @@ function M.init()
   Controls.check_stats    = _G[names.CHECK_STATS]
   Controls.check_buffs    = _G[names.CHECK_BUFFS]
   Controls.check_passives = _G[names.CHECK_PASSIVES]
+  Controls.check_cp       = _G[names.CHECK_CP]
 
   Controls.generate:SetText(C.UI.GENERATE_BUTTON)
   Controls.copy:SetText(C.UI.COPY_BUTTON)
@@ -30,6 +31,7 @@ function M.init()
   _G[names.CHECK_STATS    .. "Label"]:SetText(C.UI.CHECK_STATS_LABEL)
   _G[names.CHECK_BUFFS    .. "Label"]:SetText(C.UI.CHECK_BUFFS_LABEL)
   _G[names.CHECK_PASSIVES .. "Label"]:SetText(C.UI.CHECK_PASSIVES_LABEL)
+  _G[names.CHECK_CP       .. "Label"]:SetText(C.UI.CHECK_CP_LABEL)
 
   -- Restore saved checkbox states
   local SV = C.SAVED_VARS
@@ -37,12 +39,14 @@ function M.init()
   ZO_CheckButton_SetCheckState(Controls.check_stats,    CDescriptor.Settings.get(SV.INCLUDE_STATS))
   ZO_CheckButton_SetCheckState(Controls.check_buffs,    CDescriptor.Settings.get(SV.INCLUDE_BUFFS))
   ZO_CheckButton_SetCheckState(Controls.check_passives, CDescriptor.Settings.get(SV.INCLUDE_PASSIVES))
+  ZO_CheckButton_SetCheckState(Controls.check_cp,       CDescriptor.Settings.get(SV.INCLUDE_CP))
 
   -- Persist state on click
   Controls.check_sets.clickedCallback     = function() M.on_checkbox_changed(Controls.check_sets,     SV.INCLUDE_SETS)     end
   Controls.check_stats.clickedCallback    = function() M.on_checkbox_changed(Controls.check_stats,    SV.INCLUDE_STATS)    end
   Controls.check_buffs.clickedCallback    = function() M.on_checkbox_changed(Controls.check_buffs,    SV.INCLUDE_BUFFS)    end
   Controls.check_passives.clickedCallback = function() M.on_checkbox_changed(Controls.check_passives, SV.INCLUDE_PASSIVES) end
+  Controls.check_cp.clickedCallback       = function() M.on_checkbox_changed(Controls.check_cp,       SV.INCLUDE_CP)       end
 
   Controls.scrollbar:SetMinMax(1, 1)
   Controls.scrollbar:SetValue(1)
@@ -51,7 +55,7 @@ function M.init()
   local w = CDescriptor.Settings.get(SV.WINDOW_W)
   local h = CDescriptor.Settings.get(SV.WINDOW_H)
   if w and h then Controls.window:SetDimensions(w, h) end
-  Controls.window:SetDimensionConstraints(380, 400, 0, 0)
+  Controls.window:SetDimensionConstraints(380, 430, 0, 0)
 end
 
 local status_pulse = nil
@@ -104,7 +108,8 @@ function M.on_generate()
     sets      = CDescriptor.Adapters.Sets,
     stats     = CDescriptor.Adapters.Stats,
     buffs     = CDescriptor.Adapters.Buffs,
-    passives  = CDescriptor.Adapters.Passives,
+    passives        = CDescriptor.Adapters.Passives,
+    champion_points = CDescriptor.Adapters.ChampionPoints,
   }
 
   local ok, raw = pcall(CDescriptor.Extractor.extract, adapters)
@@ -118,6 +123,7 @@ function M.on_generate()
     include_stats    = ZO_CheckButton_IsChecked(Controls.check_stats),
     include_buffs    = ZO_CheckButton_IsChecked(Controls.check_buffs),
     include_passives = ZO_CheckButton_IsChecked(Controls.check_passives),
+    include_cp       = ZO_CheckButton_IsChecked(Controls.check_cp),
   }
 
   local ok2, transformed = pcall(CDescriptor.Transformer.transform, raw, config)

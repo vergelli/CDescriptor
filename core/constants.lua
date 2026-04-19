@@ -19,6 +19,7 @@ CDescriptor.Constants = {
     CHECK_STATS     = "CDescriptorWindowCheckStats",
     CHECK_BUFFS     = "CDescriptorWindowCheckBuffs",
     CHECK_PASSIVES  = "CDescriptorWindowCheckPassives",
+    CHECK_CP        = "CDescriptorWindowCheckCp",
   },
 
   -- UI strings
@@ -35,6 +36,7 @@ CDescriptor.Constants = {
     CHECK_STATS_LABEL     = "Combat stats",
     CHECK_BUFFS_LABEL     = "Active buffs",
     CHECK_PASSIVES_LABEL  = "Passive skills",
+    CHECK_CP_LABEL        = "Champion points",
   },
 
   -- Saved variables keys
@@ -47,5 +49,6 @@ CDescriptor.Constants = {
     INCLUDE_STATS    = "include_stats",
     INCLUDE_BUFFS    = "include_buffs",
     INCLUDE_PASSIVES = "include_passives",
+    INCLUDE_CP       = "include_cp",
   },
 }

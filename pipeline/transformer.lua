@@ -183,6 +183,37 @@ local function transform_buffs(buffs)
   return out
 end
 
+-- ── Champion Points ───────────────────────────────────────────────────────
+
+local function transform_champion_points(cp)
+  if not cp then return {} end
+  local out = {}
+  for discipline_name, discipline_data in pairs(cp) do
+    local slottable = {}
+    for _, entry in ipairs(discipline_data.slottable or {}) do
+      slottable[#slottable + 1] = {
+        __key_order = { "name", "points" },
+        name   = entry.name,
+        points = entry.points,
+      }
+    end
+    local passive = {}
+    for _, entry in ipairs(discipline_data.passive or {}) do
+      passive[#passive + 1] = {
+        __key_order = { "name", "points" },
+        name   = entry.name,
+        points = entry.points,
+      }
+    end
+    out[discipline_name] = {
+      __key_order = { "slottable", "passive" },
+      slottable = slottable,
+      passive   = passive,
+    }
+  end
+  return out
+end
+
 -- ── Root ──────────────────────────────────────────────────────────────────
 
 -- config fields (all boolean, nil treated as default):
@@ -190,18 +221,20 @@ end
 --   include_stats    → default false
 --   include_buffs    → default false
 --   include_passives → default false
+--   include_cp       → default false
 function M.transform(raw, config)
   config = config or {}
   local include_sets     = config.include_sets     ~= false  -- default true
   local include_stats    = config.include_stats    == true   -- default false
   local include_buffs    = config.include_buffs    == true   -- default false
   local include_passives = config.include_passives == true   -- default false
+  local include_cp       = config.include_cp       == true   -- default false
 
   local character = raw.character or {}
   local skills    = raw.skills or {}
 
   local result = {
-    __key_order  = { "character", "bar_1_skills", "bar_2_skills", "gear", "sets_buffs", "stats", "buffs", "passive_skills" },
+    __key_order  = { "character", "bar_1_skills", "bar_2_skills", "gear", "sets_buffs", "stats", "buffs", "passive_skills", "champion_points" },
     character    = {
       name            = character.name,
       class           = character.class,
@@ -214,10 +247,11 @@ function M.transform(raw, config)
     gear         = transform_gear(raw.gear),
   }
 
-  if include_sets     then result.sets_buffs    = transform_sets(raw.sets)           end
-  if include_stats    then result.stats         = transform_stats(raw.stats)          end
-  if include_buffs    then result.buffs         = transform_buffs(raw.buffs)          end
-  if include_passives then result.passive_skills = transform_passives(raw.passives)   end
+  if include_sets     then result.sets_buffs      = transform_sets(raw.sets)                          end
+  if include_stats    then result.stats           = transform_stats(raw.stats)                         end
+  if include_buffs    then result.buffs           = transform_buffs(raw.buffs)                         end
+  if include_passives then result.passive_skills  = transform_passives(raw.passives)                   end
+  if include_cp       then result.champion_points = transform_champion_points(raw.champion_points)     end
 
   if CDescriptor.Constants and CDescriptor.Constants.DEBUG and skills._debug then
     result._debug = skills._debug

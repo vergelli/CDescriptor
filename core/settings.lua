@@ -11,6 +11,7 @@ local DEFAULTS = {
   include_stats    = false,  -- OFF by default
   include_buffs    = false,  -- OFF by default
   include_passives = false,  -- OFF by default
+  include_cp       = false,  -- OFF by default
 }
 
 function M.load()

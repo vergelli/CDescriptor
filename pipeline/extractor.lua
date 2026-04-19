@@ -11,7 +11,8 @@ function M.extract(adapters)
     sets      = adapters.sets.get_active_sets(),
     stats     = adapters.stats.get_stats(),
     buffs     = adapters.buffs.get_active_buffs(),
-    passives  = adapters.passives and adapters.passives.get_learned_passives() or nil,
+    passives        = adapters.passives        and adapters.passives.get_learned_passives()    or nil,
+    champion_points = adapters.champion_points and adapters.champion_points.get_champion_points() or nil,
   }
 end
 
