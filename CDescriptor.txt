@@ -6,6 +6,7 @@
 ## SavedVariables: CDescriptorSavedVars
 
 lib/json.lua
+core/constants.lua
 core/events.lua
 core/settings.lua
 adapters/zenimax/character.lua

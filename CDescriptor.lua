@@ -1,30 +1,34 @@
--- Entry point: initializes the addon after all files are loaded.
 CDescriptor = CDescriptor or {}
-CDescriptor.name    = "CDescriptor"
-CDescriptor.version = "0.1.0"
-
--- Debug helper: set DEBUG = false to disable in production.
-local DEBUG = true
-function CDescriptor.log(msg)
-    if DEBUG then d("[CDescriptor] " .. tostring(msg)) end
-end
 
 local function on_addon_loaded()
-  CDescriptor.log("Loaded v" .. CDescriptor.version .. " — /cdescriptor to open")
-  CDescriptor.Settings.load()
-  CDescriptorWindowGenerateButton:SetText("Generate")
-  CDescriptorWindowCopyButton:SetText("Copy")
+  local K = CDescriptor.Constants
 
-  local x = CDescriptor.Settings.get("window_x")
-  local y = CDescriptor.Settings.get("window_y")
+  CDescriptor.name    = K.ADDON_NAME
+  CDescriptor.version = K.VERSION
+
+  CDescriptor.Settings.load()
+  CDescriptor.UI.init()
+
+  local x = CDescriptor.Settings.get(K.SAVED_VARS.WINDOW_X)
+  local y = CDescriptor.Settings.get(K.SAVED_VARS.WINDOW_Y)
   if x and y then
-    CDescriptorWindow:ClearAnchors()
-    CDescriptorWindow:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, x, y)
+    local window = _G[K.CONTROLS.WINDOW]
+    window:ClearAnchors()
+    window:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, x, y)
   end
 
-  SLASH_COMMANDS["/cdescriptor"] = function()
+  SLASH_COMMANDS[K.SLASH_COMMAND] = function()
     CDescriptor.UI.toggle()
+  end
+
+  CDescriptor.log("Loaded v" .. K.VERSION .. " — " .. K.SLASH_COMMAND .. " to open")
+end
+
+-- Debug helper: disabled automatically when Constants.DEBUG = false.
+function CDescriptor.log(msg)
+  if CDescriptor.Constants and CDescriptor.Constants.DEBUG then
+    d("[CDescriptor] " .. tostring(msg))
   end
 end
 
-CDescriptor.Events.register_addon_loaded(CDescriptor.name, on_addon_loaded)
+CDescriptor.Events.register_addon_loaded(CDescriptor.Constants.ADDON_NAME, on_addon_loaded)

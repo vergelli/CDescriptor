@@ -37,7 +37,7 @@
           <Anchor point="TOPLEFT" offsetX="20" offsetY="96"/>
           <Anchor point="BOTTOMRIGHT" offsetX="-20" offsetY="-54"/>
           <Controls>
-            <EditBox name="$(parent)OutputBox" inherits="ZO_DefaultEditMultiLineForBackdrop" maxInputCharacters="100000">
+            <EditBox name="CDescriptorOutputBox" inherits="ZO_DefaultEditMultiLineForBackdrop" maxInputCharacters="100000">
             </EditBox>
           </Controls>
         </Backdrop>
@@ -46,7 +46,7 @@
         <Button name="$(parent)CopyButton" inherits="ZO_DefaultButton">
           <Dimensions x="130" y="32"/>
           <Anchor point="BOTTOMRIGHT" offsetX="-20" offsetY="-14"/>
-          <OnClicked>CopyToClipboard(CDescriptorWindowOutputBox:GetText())</OnClicked>
+          <OnClicked>CopyToClipboard(CDescriptorOutputBox:GetText())</OnClicked>
         </Button>
 
       </Controls>
