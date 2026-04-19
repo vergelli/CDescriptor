@@ -5,11 +5,11 @@ local M = {}
 
 function M.get_info()
   return {
-    name            = GetUnitName("player"),
-    class           = GetUnitClass("player"),
-    race            = GetUnitRace("player"),
-    level           = GetUnitLevel("player"),
-    effective_level = GetUnitEffectiveLevel("player"),
+    name             = GetUnitName("player"),
+    class            = GetUnitClass("player"),
+    race             = GetUnitRace("player"),
+    level            = GetUnitLevel("player"),
+    champion_points  = GetUnitChampionPoints("player"),
   }
 end
 

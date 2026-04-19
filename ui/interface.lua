@@ -5,18 +5,20 @@ local M = CDescriptor.UI
 local C  -- populated in M.init() to avoid referencing constants before they load
 local Controls = {}
 
--- Called from CDescriptor.lua after all files and controls are ready.
 function M.init()
   C = CDescriptor.Constants
   local names = C.CONTROLS
-  Controls.window   = _G[names.WINDOW]
-  Controls.output   = _G[names.OUTPUT_BOX]
-  Controls.status   = _G[names.STATUS_LABEL]
-  Controls.generate = _G[names.GENERATE_BUTTON]
-  Controls.copy     = _G[names.COPY_BUTTON]
+  Controls.window    = _G[names.WINDOW]
+  Controls.output    = _G[names.OUTPUT_BOX]
+  Controls.scrollbar = _G[names.SCROLLBAR]
+  Controls.status    = _G[names.STATUS_LABEL]
+  Controls.generate  = _G[names.GENERATE_BUTTON]
+  Controls.copy      = _G[names.COPY_BUTTON]
 
   Controls.generate:SetText(C.UI.GENERATE_BUTTON)
   Controls.copy:SetText(C.UI.COPY_BUTTON)
+  Controls.scrollbar:SetMinMax(1, 1)
+  Controls.scrollbar:SetValue(1)
 end
 
 local function set_status(msg)
@@ -25,6 +27,17 @@ end
 
 local function set_output(text)
   Controls.output:SetText(text)
+end
+
+local function update_scrollbar()
+  local extents = Controls.output:GetScrollExtents()
+  if extents and extents > 0 then
+    Controls.scrollbar:SetMinMax(1, 1 + extents)
+    Controls.scrollbar:SetValue(1)
+    Controls.scrollbar:SetHidden(false)
+  else
+    Controls.scrollbar:SetHidden(true)
+  end
 end
 
 function M.on_generate()
@@ -57,7 +70,24 @@ function M.on_generate()
   end
 
   set_output(json_str)
+  update_scrollbar()
   set_status(C.UI.STATUS_DONE)
+end
+
+function M.on_copy()
+  Controls.output:TakeFocus()
+  Controls.output:SelectAll()
+  set_status(C.UI.STATUS_COPY)
+end
+
+-- Called from slider OnValueChanged (hardware events only).
+function M.on_scroll(value)
+  Controls.output:SetTopLineIndex(math.floor(value))
+end
+
+-- Called from EditBox OnMouseWheel after scrolling.
+function M.on_editbox_scroll(lineIndex)
+  Controls.scrollbar:SetValue(lineIndex)
 end
 
 function M.on_move_stop()

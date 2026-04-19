@@ -19,34 +19,56 @@
           <OnClicked>CDescriptorWindow:SetHidden(true)</OnClicked>
         </Button>
 
-        <!-- Boton Generar -->
         <Button name="$(parent)GenerateButton" inherits="ZO_DefaultButton">
           <Dimensions x="130" y="32"/>
           <Anchor point="TOPLEFT" offsetX="20" offsetY="50"/>
           <OnClicked>CDescriptor.UI.on_generate()</OnClicked>
-
         </Button>
 
-        <!-- Estado (reemplaza la barra de progreso) -->
         <Label name="$(parent)StatusLabel" font="ZoFontGameSmall" color="0.7,0.7,0.7,1" text="">
           <Anchor point="LEFT" relativeTo="$(parent)GenerateButton" relativePoint="RIGHT" offsetX="12"/>
         </Label>
 
-        <!-- Output: Backdrop scrollable con EditBox seleccionable -->
+        <!-- Output area with scrollable EditBox -->
         <Backdrop name="$(parent)OutputBg" inherits="ZO_MultiLineEditBackdrop_Keyboard">
           <Anchor point="TOPLEFT" offsetX="20" offsetY="96"/>
-          <Anchor point="BOTTOMRIGHT" offsetX="-20" offsetY="-54"/>
+          <Anchor point="BOTTOMRIGHT" offsetX="-44" offsetY="-54"/>
           <Controls>
             <EditBox name="CDescriptorOutputBox" inherits="ZO_DefaultEditMultiLineForBackdrop" maxInputCharacters="100000">
+              <OnMouseWheel>
+                local currentLine = self:GetTopLineIndex()
+                if shift then delta = delta * 10 end
+                local nextLine = zo_clamp(currentLine - delta, 1, self:GetScrollExtents() + 1)
+                self:SetTopLineIndex(nextLine)
+                CDescriptor.UI.on_editbox_scroll(nextLine)
+              </OnMouseWheel>
             </EditBox>
           </Controls>
         </Backdrop>
 
-        <!-- Boton Copy: llama CopyToClipboard directamente (funcion protegida) -->
+        <!-- Vertical scrollbar synced to EditBox -->
+        <Slider name="CDescriptorScrollbar" mouseEnabled="true">
+          <Dimensions x="16" y="32"/>
+          <Anchor point="TOPLEFT" relativeTo="$(parent)OutputBg" relativePoint="TOPRIGHT" offsetX="4"/>
+          <Anchor point="BOTTOMLEFT" relativeTo="$(parent)OutputBg" relativePoint="BOTTOMRIGHT" offsetX="4"/>
+          <ThumbTexture textureFile="EsoUI/Art/Miscellaneous/scrollbox_elevator.dds"
+                        disabledTextureFile="EsoUI/Art/Miscellaneous/scrollbox_elevator_disabled.dds"
+                        thumbWidth="16" thumbHeight="32"/>
+          <BackgroundTop    textureFile="EsoUI/Art/Miscellaneous/scrollbox_track.dds"/>
+          <BackgroundMiddle textureFile="EsoUI/Art/Miscellaneous/scrollbox_track.dds"/>
+          <BackgroundBottom textureFile="EsoUI/Art/Miscellaneous/scrollbox_track.dds"/>
+          <OnValueChanged>
+            if eventReason == EVENT_REASON_HARDWARE then
+              CDescriptor.UI.on_scroll(value)
+            end
+          </OnValueChanged>
+        </Slider>
+
+        <!-- Copy: selects all text so user can Ctrl+C -->
         <Button name="$(parent)CopyButton" inherits="ZO_DefaultButton">
           <Dimensions x="130" y="32"/>
           <Anchor point="BOTTOMRIGHT" offsetX="-20" offsetY="-14"/>
-          <OnClicked>CopyToClipboard(CDescriptorOutputBox:GetText())</OnClicked>
+          <OnClicked>CDescriptor.UI.on_copy()</OnClicked>
         </Button>
 
       </Controls>

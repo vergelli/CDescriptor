@@ -36,18 +36,27 @@ local function get_scribing_scripts(crafted_id)
   return scripts
 end
 
+-- ACTION_BAR_FIRST_NORMAL_SLOT_INDEX and ACTION_BAR_ULTIMATE_SLOT_INDEX are
+-- 0-indexed constants; the GetSlot* API is 1-indexed, hence the +1.
+-- This skips slots 1-2 (Light/Heavy Attack) and reads only the 5 skill slots
+-- and the ultimate slot.
 local function get_bar_slots(hotbar_category)
   local crafted_map = build_crafted_ability_map()
   local slots = {}
-  for slot = 1, 6 do
+  local skill_index = 1
+
+  for slot = ACTION_BAR_FIRST_NORMAL_SLOT_INDEX + 1, ACTION_BAR_ULTIMATE_SLOT_INDEX + 1 do
+    local slot_type = GetSlotType(slot, hotbar_category)
+    local is_ultimate = (slot_type == ACTION_SLOT_TYPE_ULTIMATE)
     local name = GetSlotName(slot, hotbar_category) or ""
+
     local slot_data = {
       name        = name,
       ability_id  = GetSlotBoundId(slot, hotbar_category),
-      is_ultimate = (slot == 6),
+      is_ultimate = is_ultimate,
       scripts     = nil,
     }
-    -- Attempt scribing match by display name
+
     local crafted_id = crafted_map[name]
     if crafted_id then
       local scripts = get_scribing_scripts(crafted_id)
@@ -55,8 +64,15 @@ local function get_bar_slots(hotbar_category)
         slot_data.scripts = scripts
       end
     end
-    slots[slot] = slot_data
+
+    if is_ultimate then
+      slots[6] = slot_data
+    else
+      slots[skill_index] = slot_data
+      skill_index = skill_index + 1
+    end
   end
+
   return slots
 end
 

@@ -10,6 +10,7 @@ CDescriptor.Constants = {
   CONTROLS = {
     WINDOW          = "CDescriptorWindow",
     OUTPUT_BOX      = "CDescriptorOutputBox",
+    SCROLLBAR       = "CDescriptorScrollbar",
     STATUS_LABEL    = "CDescriptorWindowStatusLabel",
     GENERATE_BUTTON = "CDescriptorWindowGenerateButton",
     COPY_BUTTON     = "CDescriptorWindowCopyButton",
@@ -23,6 +24,7 @@ CDescriptor.Constants = {
     STATUS_EXTRACT   = "Extracting...",
     STATUS_DONE      = "Done.",
     STATUS_ERROR     = "Error: ",
+    STATUS_COPY      = "Selected — press Ctrl+C to copy",
   },
 
   -- Saved variables keys

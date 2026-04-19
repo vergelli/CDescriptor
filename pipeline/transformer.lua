@@ -6,9 +6,15 @@ local M = {}
 
 local SLOT_LABELS = { "1", "2", "3", "4", "5" }
 
+-- Strips ESO color markup: |cRRGGBBtext|r  →  text
+local function strip_markup(s)
+  if type(s) ~= "string" then return s end
+  return (s:gsub("|c%x%x%x%x%x%x(.-)%|r", "%1"))
+end
+
 local function format_skill_slot(slot_data)
   if not slot_data or slot_data.name == "" then return nil end
-  local name = slot_data.name
+  local name = strip_markup(slot_data.name)
   if slot_data.is_ultimate then
     name = name .. " (Ultimate)"
   end
@@ -38,7 +44,7 @@ local function transform_weapon_slot(item)
     set     = item.set_name,
     quality = item.quality,
     enchant = item.enchant,
-    trait   = item.trait,
+    trait   = strip_markup(item.trait),
   }
 end
 
@@ -50,7 +56,7 @@ local function transform_armor_slot(item)
     set     = item.set_name,
     quality = item.quality,
     enchant = item.enchant,
-    trait   = item.trait,
+    trait   = strip_markup(item.trait),
   }
 end
 
@@ -61,7 +67,7 @@ local function transform_jewelry_slot(item)
     set     = item.set_name,
     quality = item.quality,
     enchant = item.enchant,
-    trait   = item.trait,
+    trait   = strip_markup(item.trait),
   }
 end
 
@@ -89,6 +95,17 @@ local function transform_gear(gear)
   }
 end
 
+local function transform_sets(sets)
+  if not sets then return {} end
+  local out = {}
+  for name, data in pairs(sets) do
+    out[name] = {
+      description = strip_markup(data.description),
+    }
+  end
+  return out
+end
+
 function M.transform(raw)
   local character = raw.character or {}
   local skills    = raw.skills or {}
@@ -98,12 +115,12 @@ function M.transform(raw)
       class           = character.class,
       race            = character.race,
       level           = character.level,
-      champion_points = character.effective_level,
+      champion_points = character.champion_points,
     },
     bar_1_skills = transform_bar(skills.bar_1),
     bar_2_skills = transform_bar(skills.bar_2),
     gear         = transform_gear(raw.gear),
-    sets_buffs   = raw.sets or {},
+    sets_buffs   = transform_sets(raw.sets),
   }
 end
 
