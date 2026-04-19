@@ -3,9 +3,8 @@ CDescriptor.UI = {}
 
 local M = CDescriptor.UI
 
-local function set_progress(value, label)
-  CDescriptorWindowProgressBar:SetValue(value)
-  CDescriptorWindowProgressLabel:SetText(label or "")
+local function set_status(msg)
+  CDescriptorWindowStatusLabel:SetText(msg or "")
 end
 
 local function set_output(text)
@@ -13,7 +12,7 @@ local function set_output(text)
 end
 
 function M.on_generate()
-  set_progress(0, "Extrayendo datos...")
+  set_status("Extracting...")
   set_output("")
 
   local adapters = {
@@ -25,33 +24,24 @@ function M.on_generate()
 
   local ok, raw = pcall(CDescriptor.Extractor.extract, adapters)
   if not ok then
-    set_progress(0, "Error en extracción: " .. tostring(raw))
+    set_status("Error: " .. tostring(raw))
     return
   end
-  set_progress(1, "Transformando datos...")
 
   local ok2, transformed = pcall(CDescriptor.Transformer.transform, raw)
   if not ok2 then
-    set_progress(1, "Error en transformación: " .. tostring(transformed))
+    set_status("Error: " .. tostring(transformed))
     return
   end
-  set_progress(2, "Serializando...")
 
   local ok3, json_str = pcall(CDescriptor.Serializer.serialize, transformed)
   if not ok3 then
-    set_progress(2, "Error en serialización: " .. tostring(json_str))
+    set_status("Error: " .. tostring(json_str))
     return
   end
 
   set_output(json_str)
-  set_progress(3, "Listo.")
-end
-
-function M.on_copy()
-  local text = CDescriptorWindowOutputBox:GetText()
-  if text and text ~= "" then
-    CopyToClipboard(text)
-  end
+  set_status("Done.")
 end
 
 function M.on_move_stop()

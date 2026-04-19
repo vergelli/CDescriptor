@@ -10,12 +10,10 @@
           <AnchorFill/>
         </Backdrop>
 
-        <!-- Titulo -->
         <Label name="$(parent)Title" font="ZoFontHeader" color="1,0.8,0,1" text="Character Descriptor">
           <Anchor point="TOP" offsetY="14"/>
         </Label>
 
-        <!-- Boton cerrar -->
         <Button name="$(parent)CloseButton" inherits="ZO_CloseButton">
           <Anchor point="TOPRIGHT" offsetX="-4" offsetY="4"/>
           <OnClicked>CDescriptorWindow:SetHidden(true)</OnClicked>
@@ -26,30 +24,29 @@
           <Dimensions x="130" y="32"/>
           <Anchor point="TOPLEFT" offsetX="20" offsetY="50"/>
           <OnClicked>CDescriptor.UI.on_generate()</OnClicked>
+
         </Button>
 
-        <!-- Barra de progreso -->
-        <StatusBar name="$(parent)ProgressBar" minimumValue="0" maximumValue="3" value="0">
-          <Dimensions x="440" y="18"/>
-          <Anchor point="TOPLEFT" offsetX="165" offsetY="55"/>
-        </StatusBar>
-
-        <!-- Etiqueta de estado -->
-        <Label name="$(parent)ProgressLabel" font="ZoFontGameSmall" color="0.7,0.7,0.7,1" text="">
-          <Anchor point="TOPLEFT" relativeTo="$(parent)ProgressBar" relativePoint="BOTTOMLEFT" offsetY="2"/>
+        <!-- Estado (reemplaza la barra de progreso) -->
+        <Label name="$(parent)StatusLabel" font="ZoFontGameSmall" color="0.7,0.7,0.7,1" text="">
+          <Anchor point="LEFT" relativeTo="$(parent)GenerateButton" relativePoint="RIGHT" offsetX="12"/>
         </Label>
 
-        <!-- Caja de output -->
-        <EditBox name="$(parent)OutputBox" multiLine="true" maxInputCharacters="65000" font="ZoFontGameSmall">
-          <Dimensions x="576" y="370"/>
-          <Anchor point="TOPLEFT" offsetX="22" offsetY="100"/>
-        </EditBox>
+        <!-- Output: Backdrop scrollable con EditBox seleccionable -->
+        <Backdrop name="$(parent)OutputBg" inherits="ZO_MultiLineEditBackdrop_Keyboard">
+          <Anchor point="TOPLEFT" offsetX="20" offsetY="96"/>
+          <Anchor point="BOTTOMRIGHT" offsetX="-20" offsetY="-54"/>
+          <Controls>
+            <EditBox name="$(parent)OutputBox" inherits="ZO_DefaultEditMultiLineForBackdrop" maxInputCharacters="100000">
+            </EditBox>
+          </Controls>
+        </Backdrop>
 
-        <!-- Boton Copy -->
+        <!-- Boton Copy: llama CopyToClipboard directamente (funcion protegida) -->
         <Button name="$(parent)CopyButton" inherits="ZO_DefaultButton">
           <Dimensions x="130" y="32"/>
           <Anchor point="BOTTOMRIGHT" offsetX="-20" offsetY="-14"/>
-          <OnClicked>CDescriptor.UI.on_copy()</OnClicked>
+          <OnClicked>CopyToClipboard(CDescriptorWindowOutputBox:GetText())</OnClicked>
         </Button>
 
       </Controls>

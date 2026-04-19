@@ -3,20 +3,18 @@ CDescriptor = CDescriptor or {}
 CDescriptor.name    = "CDescriptor"
 CDescriptor.version = "0.1.0"
 
--- Debug helper: CDescriptor.log("mensaje") imprime al chat de ESO.
--- Desactivar en produccion cambiando DEBUG a false.
+-- Debug helper: set DEBUG = false to disable in production.
 local DEBUG = true
 function CDescriptor.log(msg)
     if DEBUG then d("[CDescriptor] " .. tostring(msg)) end
 end
 
 local function on_addon_loaded()
-  CDescriptor.log("Cargado v" .. CDescriptor.version .. " — /cdescriptor para abrir")
+  CDescriptor.log("Loaded v" .. CDescriptor.version .. " — /cdescriptor to open")
   CDescriptor.Settings.load()
-  CDescriptorWindowGenerateButton:SetText("Generar")
+  CDescriptorWindowGenerateButton:SetText("Generate")
   CDescriptorWindowCopyButton:SetText("Copy")
 
-  -- Restore window position if saved
   local x = CDescriptor.Settings.get("window_x")
   local y = CDescriptor.Settings.get("window_y")
   if x and y then
