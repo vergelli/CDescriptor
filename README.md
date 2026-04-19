@@ -11,7 +11,7 @@ A small Elder Scrolls Online addon that exports your character build as JSON, re
 Opens a window with a text box containing a JSON snapshot of your current character:
 
 - **Character** — name, class, race, level, champion points
-- **Skills** — both action bars, including ultimate
+- **Skills** — both action bars, including ultimate; scribing skills include their active scripts (a/b/c) with descriptions
 - **Gear** — each slot with item name, set, quality, trait, and enchant
 - **Set descriptions** *(optional)* — the full text of each equipped set bonus
 - **Combat stats** *(optional)* — max health/magicka/stamina, regen, spell damage, penetration, resistances, and more
