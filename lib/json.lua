@@ -59,11 +59,30 @@ encode_value = function(val, indent, step)
       return '[\n' .. table.concat(parts, ',\n') .. '\n' .. indent .. ']'
     else
       local parts = {}
-      for k, v in pairs(val) do
-        local key = encode_string(tostring(k))
-        parts[#parts + 1] = inner .. key .. ': ' .. encode_value(v, inner, step)
+      local key_order = val.__key_order
+      if key_order then
+        local seen = {}
+        for _, k in ipairs(key_order) do
+          if val[k] ~= nil then
+            seen[k] = true
+            parts[#parts + 1] = inner .. encode_string(tostring(k)) .. ': ' .. encode_value(val[k], inner, step)
+          end
+        end
+        local rest = {}
+        for k, v in pairs(val) do
+          if k ~= '__key_order' and not seen[k] then
+            rest[#rest + 1] = inner .. encode_string(tostring(k)) .. ': ' .. encode_value(v, inner, step)
+          end
+        end
+        table.sort(rest)
+        for _, p in ipairs(rest) do parts[#parts + 1] = p end
+      else
+        for k, v in pairs(val) do
+          local key = encode_string(tostring(k))
+          parts[#parts + 1] = inner .. key .. ': ' .. encode_value(v, inner, step)
+        end
+        table.sort(parts)
       end
-      table.sort(parts)
       if #parts == 0 then return '{}' end
       return '{\n' .. table.concat(parts, ',\n') .. '\n' .. indent .. '}'
     end

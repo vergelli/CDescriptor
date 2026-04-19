@@ -25,6 +25,10 @@ function M.get_active_buffs()
         description = GetAbilityDescription(ability_id, nil, "player") or nil
         if description == "" then description = nil end
       end
+      if not description and buff_slot and buff_slot ~= 0 then
+        local effect_desc = GetAbilityEffectDescription(buff_slot) or nil
+        if effect_desc ~= "" then description = effect_desc end
+      end
 
       buffs[#buffs + 1] = {
         name               = name,

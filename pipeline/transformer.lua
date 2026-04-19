@@ -136,6 +136,7 @@ local function transform_buffs(buffs)
     -- name first, description second — order matters for readability
     local desc = b.description and strip_markup(b.description) or nil
     local entry = {
+      __key_order = { "name", "description", "stacks", "source" },
       name        = b.name,
       description = desc,
       stacks      = b.stacks,
