@@ -3,6 +3,13 @@ CDescriptor = CDescriptor or {}
 CDescriptor.name    = "CDescriptor"
 CDescriptor.version = "0.1.0"
 
+-- Debug helper: CDescriptor.log("mensaje") imprime al chat de ESO.
+-- Desactivar en produccion cambiando DEBUG a false.
+local DEBUG = true
+function CDescriptor.log(msg)
+    if DEBUG then d("[CDescriptor] " .. tostring(msg)) end
+end
+
 local function on_addon_loaded()
   CDescriptor.Settings.load()
 
