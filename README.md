@@ -5,54 +5,88 @@
 ![ESO API](https://img.shields.io/badge/ESO%20API-101049-orange)
 ![No dependencies](https://img.shields.io/badge/dependencies-none-brightgreen)
 ![License](https://img.shields.io/badge/license-MIT-green)
+![AI Assisted](https://img.shields.io/badge/AI%20Assisted-Claude%20by%20Anthropic-D97757?logo=anthropic&logoColor=white)
 
-A small Elder Scrolls Online addon that exports your character build as JSON, ready to paste into an LLM, a spreadsheet, or wherever you need it.
+A small Elder Scrolls Online addon that exports your character build as structured JSON — ready to paste into an LLM, a spreadsheet, or anywhere you need it.
 
-## What it does
+---
 
-Opens a window with a text box containing a JSON snapshot of your current character:
+## What it exports
 
-- **Character** — name, class, race, level, champion points
-- **Skills** — both action bars, including ultimate; scribing skills include their active scripts (a/b/c) with descriptions
+The output always includes:
+
+- **Character** — name, class, race, level, champion point total
+- **Skills** — both action bars including ultimate; scribing skills include their active scripts (a/b/c) with name and description
 - **Gear** — each slot with item name, set, quality, trait, and enchant
-- **Set descriptions** *(optional)* — the full text of each equipped set bonus
-- **Combat stats** *(optional)* — max health/magicka/stamina, regen, spell damage, penetration, resistances, and more
-- **Active buffs** *(optional)* — all buffs currently on your character
 
-The three optional sections are toggled with checkboxes in the window.
+Five additional sections are optional, each controlled by a checkbox:
+
+| Checkbox | Contents |
+|---|---|
+| Set descriptions | Full bonus text for each equipped set, with piece count |
+| Combat stats | Max resources, regen, spell/weapon damage, penetration, resistances |
+| Active buffs | All buffs currently applied to your character |
+| Passive skills | Learned vs. total passives per skill line |
+| Champion points | Slottable and passive CP investments per discipline |
+
+![includes](doc/assets/Includes.jpg)
+
+---
+
+## Dynamic Prompt
+
+Enable the **Include Prompt** checkbox to attach a structured LLM prompt above the JSON output. Configure:
+
+- **Language** — the language you want the analysis written in
+- **Content type** — PvE (Solo / Dungeons / Trials) or PvP (Cyrodiil / Imperial City / Battlegrounds), with difficulty for group content
+- **Role** — Full analysis, DPS, Tank, Healer, or Hybrid
+
+The result is a **ready-to-paste** block:
+
+ **[PROMPT]** + **[JSON]**
+ 
+ one copy action.
+
+---
+
+## Screenshots
+
+![Window empty](doc/assets/empty_1.jpg)
+![Window filled](doc/assets/filled_2.jpg)
+
+---
 
 ## Usage
+
 1. Log in to your character.
-2. Type `/cdescriptor` or use the keybinding you set in **Options → Keybindings → CDescriptor**.
-3. Tick the sections you want, then click **Generate**.
-4. Click **Select** — the text is selected. Press **Ctrl+C**.
-5. Paste anywhere.
+2. Type `/cdescriptor` or use the keybinding you assigned in **Options → Keybindings → CDescriptor**.
+3. Tick the sections you want included.
+4. Click **Generate**.
+5. Click **Select** — the full output is highlighted. Press **Ctrl+C**.
+6. Paste anywhere.
 
-![Empty](doc/assets/empty_1.jpg)
-![filled](doc/assets/filled_2.jpg)
-
+---
 
 ## Installation
 
-1. Download and extract the folder.
-2. Place `CDescriptor/` inside your `Elder Scrolls Online/live/AddOns/` directory.
+1. Download and extract the zip.
+2. Place the `CDescriptor/` folder inside your `Elder Scrolls Online/live/AddOns/` directory.
 3. Enable it in the **AddOns** menu on the character select screen.
 
-## Notes
+No library dependencies required.
 
-- No library dependencies.
-- Settings (checkbox states, window position) are saved per account.
-- The output is plain JSON — no markup, no metadata.
+---
 
 ## Future ideas
 
-Sections that could become additional checkboxes, subject to what the ESO API actually exposes:
+Sections that could become additional checkboxes, subject to what the ESO API exposes:
 
-- **PVP**: Alliance War rank and points
-- **Crafting professions** — skill level in each tradeskill: Blacksmithing, Clothing, Woodworking, Enchanting, Alchemy, etc.
-- **Achievements**: feasible but complex, we will see.
-- **Output formats**: currently JSON only. _YAML_ and _Markdown_ are natural candidates. _YAML_ is more human-readable I gues, _Markdown_ could render nicely.
+- **PvP rank** — Alliance War rank and points
+- **Crafting professions** — skill level per tradeskill
+- **Output formats** — YAML or Markdown as alternatives to JSON
 
-Ideas that sound good but need investigation first: mount stats, companion info, housing.
+Contributions welcome.
 
-Contributions welcome!
+---
+
+> Developed with AI assistance (Claude by Anthropic).
