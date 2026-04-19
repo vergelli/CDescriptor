@@ -14,7 +14,8 @@ local SLOT_LABELS = { "1", "2", "3", "4", "5" }
 local function strip_markup(s)
   if type(s) ~= "string" then return s end
   s = s:gsub("|c%x%x%x%x%x%x(.-)%|r", "%1")
-  return (s:match("^(.-)%s*$"))  -- trim trailing whitespace/newlines
+  s = s:gsub("%s*\n+%s*", " ")   -- collapse newlines to a single space
+  return (s:match("^(.-)%s*$"))  -- trim trailing whitespace
 end
 
 -- ── Skills ────────────────────────────────────────────────────────────────
