@@ -1,5 +1,4 @@
--- Collects unique set bonus descriptions from all equipped items.
--- Uses GetItemLinkSetBonusInfo to get the highest-tier bonus description per set.
+-- Collects all set bonus tiers and piece counts from equipped items.
 CDescriptor = CDescriptor or {}
 CDescriptor.Adapters = CDescriptor.Adapters or {}
 
@@ -17,18 +16,19 @@ local ARMOR_SLOTS = {
   EQUIP_SLOT_NECK, EQUIP_SLOT_RING1, EQUIP_SLOT_RING2,
 }
 
-local function get_set_bonus_description(link)
-  local has_set, set_name, num_bonuses = GetItemLinkSetInfo(link, true)
-  if not has_set or num_bonuses == 0 then return nil, nil end
+local function get_set_data(link)
+  local has_set, set_name, num_bonuses, num_normal, _, _, num_perfected = GetItemLinkSetInfo(link, true)
+  if not has_set or num_bonuses == 0 then return nil, nil, nil end
 
-  local best_desc = ""
+  local bonuses = {}
   for i = 1, num_bonuses do
     local _, desc = GetItemLinkSetBonusInfo(link, true, i)
     if desc and desc ~= "" then
-      best_desc = desc
+      bonuses[#bonuses + 1] = desc
     end
   end
-  return set_name, best_desc
+  local count = (num_normal or 0) + (num_perfected or 0)
+  return set_name, bonuses, count
 end
 
 function M.get_active_sets()
@@ -42,9 +42,9 @@ function M.get_active_sets()
     if has_item then
       local link = GetItemLink(BAG_WORN, equip_slot, LINK_STYLE_BRACKETS)
       if link and link ~= "" then
-        local set_name, desc = get_set_bonus_description(link)
+        local set_name, bonuses, count = get_set_data(link)
         if set_name and not sets[set_name] then
-          sets[set_name] = { description = desc }
+          sets[set_name] = { bonuses = bonuses, count_equipped = count }
         end
       end
     end

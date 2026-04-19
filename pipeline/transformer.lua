@@ -125,7 +125,15 @@ local function transform_sets(sets)
   if not sets then return {} end
   local out = {}
   for name, data in pairs(sets) do
-    out[name] = { description = strip_markup(data.description) }
+    local clean_bonuses = {}
+    for _, b in ipairs(data.bonuses or {}) do
+      clean_bonuses[#clean_bonuses + 1] = strip_markup(b)
+    end
+    out[name] = {
+      __key_order    = { "bonuses", "count_equipped" },
+      bonuses        = clean_bonuses,
+      count_equipped = data.count_equipped,
+    }
   end
   return out
 end
