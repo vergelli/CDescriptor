@@ -7,11 +7,14 @@ local M = {}
 -- GetAbilityCraftedAbilityId(abilityId) doesn't reliably resolve morph IDs;
 -- iterating crafted abilities and reversing the map is the correct approach.
 local function build_crafted_ability_map()
-  local map = {}  -- ability_id -> crafted_id
+  local map = {}  -- ability_id OR crafted_id -> crafted_id
   if not IsScribingEnabled or not IsScribingEnabled() then return map end
   local n = GetNumCraftedAbilities()
   for i = 1, n do
     local crafted_id = GetCraftedAbilityIdAtIndex(i)
+    -- GetSlotBoundId returns crafted_id directly for scribing skills
+    map[crafted_id] = crafted_id
+    -- Also map the underlying ability_id as fallback
     local ability_id = GetAbilityIdForCraftedAbilityId(crafted_id)
     if ability_id and ability_id ~= 0 then
       map[ability_id] = crafted_id
