@@ -42,6 +42,11 @@ function M.init()
 
   Controls.scrollbar:SetMinMax(1, 1)
   Controls.scrollbar:SetValue(1)
+
+  local SV = C.SAVED_VARS
+  local w = CDescriptor.Settings.get(SV.WINDOW_W)
+  local h = CDescriptor.Settings.get(SV.WINDOW_H)
+  if w and h then Controls.window:SetDimensions(w, h) end
 end
 
 local function set_status(msg)
@@ -68,6 +73,7 @@ function M.on_checkbox_changed(btn, saved_var_key)
 end
 
 function M.on_generate()
+  PlaySound(SOUNDS.DIALOG_ACCEPT)
   set_status(C.UI.STATUS_EXTRACT)
   set_output(C.UI.STATUS_IDLE)
 
@@ -110,12 +116,14 @@ function M.on_generate()
 end
 
 function M.on_clear()
+  PlaySound(SOUNDS.CHAMPION_STAR_SLOT_CLEARED)
   set_output("")
   set_status(C.UI.STATUS_IDLE)
   Controls.scrollbar:SetHidden(true)
 end
 
 function M.on_copy()
+  PlaySound(SOUNDS.COMBO_CLICK)
   Controls.output:TakeFocus()
   Controls.output:SelectAll()
   set_status(C.UI.STATUS_COPY)
@@ -135,6 +143,14 @@ function M.on_move_stop()
   CDescriptor.Settings.set(C.SAVED_VARS.WINDOW_Y, y)
 end
 
+function M.on_resize_stop()
+  local w, h = Controls.window:GetDimensions()
+  CDescriptor.Settings.set(C.SAVED_VARS.WINDOW_W, w)
+  CDescriptor.Settings.set(C.SAVED_VARS.WINDOW_H, h)
+end
+
 function M.toggle()
-  Controls.window:SetHidden(not Controls.window:IsHidden())
+  local hidden = Controls.window:IsHidden()
+  Controls.window:SetHidden(not hidden)
+  PlaySound(hidden and SOUNDS.ARMORY_OPEN or SOUNDS.ADVENTURE_ZONE_OVERVIEW_CLOSED)
 end

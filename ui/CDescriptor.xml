@@ -1,9 +1,10 @@
 <GuiXml>
   <Controls>
-    <TopLevelControl name="CDescriptorWindow" hidden="true" clampedToScreen="true" movable="true" mouseEnabled="true">
+    <TopLevelControl name="CDescriptorWindow" hidden="true" clampedToScreen="true" movable="true" mouseEnabled="true" resizeHandleSize="12">
       <Anchor point="CENTER"/>
       <Dimensions x="620" y="530"/>
       <OnMoveStop>CDescriptor.UI.on_move_stop()</OnMoveStop>
+      <OnResizeStop>CDescriptor.UI.on_resize_stop()</OnResizeStop>
       <Controls>
 
         <!-- Main window backdrop -->
