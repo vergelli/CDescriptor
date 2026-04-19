@@ -51,8 +51,8 @@ The result is a **ready-to-paste** block:
 
 ## Screenshots
 
-![Window empty](doc/assets/empty_1.jpg)
-![Window filled](doc/assets/filled_2.jpg)
+![empty](doc/assets/empty_1.jpg)
+![filled](doc/assets/filled_2.jpg)
 
 ---
 
