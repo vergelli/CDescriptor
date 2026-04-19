@@ -9,6 +9,8 @@ function M.extract(adapters)
     skills    = adapters.skills.get_all_bars(),
     gear      = adapters.gear.get_equipped(),
     sets      = adapters.sets.get_active_sets(),
+    stats     = adapters.stats.get_stats(),
+    buffs     = adapters.buffs.get_active_buffs(),
   }
 end
 

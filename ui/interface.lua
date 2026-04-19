@@ -49,6 +49,8 @@ function M.on_generate()
     skills    = CDescriptor.Adapters.Skills,
     gear      = CDescriptor.Adapters.Gear,
     sets      = CDescriptor.Adapters.Sets,
+    stats     = CDescriptor.Adapters.Stats,
+    buffs     = CDescriptor.Adapters.Buffs,
   }
 
   local ok, raw = pcall(CDescriptor.Extractor.extract, adapters)

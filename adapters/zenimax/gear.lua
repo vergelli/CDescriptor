@@ -58,7 +58,7 @@ local function get_item_data(equip_slot)
   local name          = GetItemLinkName(link)
   local quality_enum  = GetItemLinkDisplayQuality(link)
   local trait_type, trait_desc = GetItemLinkTraitInfo(link)
-  local _, enchant_name, _ = GetItemLinkEnchantInfo(link)
+  local _, enchant_name, enchant_desc = GetItemLinkEnchantInfo(link)
   local has_set, set_name   = GetItemLinkSetInfo(link, true)
   local armor_type    = GetItemLinkArmorType(link)
   local weapon_type   = GetItemLinkWeaponType(link)
@@ -68,6 +68,7 @@ local function get_item_data(equip_slot)
     quality      = QUALITY_NAMES[quality_enum] or tostring(quality_enum),
     trait        = trait_desc or "",
     enchant      = enchant_name or "",
+    enchant_desc = enchant_desc or "",
     set_name     = has_set and set_name or nil,
     armor_type   = ARMOR_TYPE_NAMES[armor_type],
     weapon_type  = WEAPON_TYPE_NAMES[weapon_type],

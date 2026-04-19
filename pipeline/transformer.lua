@@ -1,5 +1,9 @@
 -- Maps raw extractor output to the output schema.
 -- Pure Lua: no ESO globals, no UI. Fully testable offline.
+--
+-- Future checkpoint system: each top-level section (character, skills, gear,
+-- sets_buffs, stats, buffs) maps 1:1 to a future UI checkbox. Keep them
+-- independently transformable.
 CDescriptor = CDescriptor or {}
 
 local M = {}
@@ -11,6 +15,8 @@ local function strip_markup(s)
   if type(s) ~= "string" then return s end
   return (s:gsub("|c%x%x%x%x%x%x(.-)%|r", "%1"))
 end
+
+-- ── Skills ────────────────────────────────────────────────────────────────
 
 local function format_skill_slot(slot_data)
   if not slot_data or slot_data.name == "" then return nil end
@@ -36,14 +42,22 @@ local function transform_bar(bar_slots)
   return out
 end
 
+-- ── Gear ──────────────────────────────────────────────────────────────────
+
+local function transform_enchant(item)
+  if not item or item.enchant == "" then return nil end
+  local desc = strip_markup(item.enchant_desc or "")
+  if desc == "" then return item.enchant end
+  return { name = item.enchant, effect = desc }
+end
+
 local function transform_weapon_slot(item)
   if not item then return nil end
-  local weapon_name = item.weapon_type or item.name
   return {
-    item    = weapon_name,
+    item    = item.weapon_type or item.name,
     set     = item.set_name,
     quality = item.quality,
-    enchant = item.enchant,
+    enchant = transform_enchant(item),
     trait   = strip_markup(item.trait),
   }
 end
@@ -55,7 +69,7 @@ local function transform_armor_slot(item)
     weight  = item.armor_type,
     set     = item.set_name,
     quality = item.quality,
-    enchant = item.enchant,
+    enchant = transform_enchant(item),
     trait   = strip_markup(item.trait),
   }
 end
@@ -66,7 +80,7 @@ local function transform_jewelry_slot(item)
     item    = item.name,
     set     = item.set_name,
     quality = item.quality,
-    enchant = item.enchant,
+    enchant = transform_enchant(item),
     trait   = strip_markup(item.trait),
   }
 end
@@ -95,16 +109,46 @@ local function transform_gear(gear)
   }
 end
 
+-- ── Sets ──────────────────────────────────────────────────────────────────
+
 local function transform_sets(sets)
   if not sets then return {} end
   local out = {}
   for name, data in pairs(sets) do
-    out[name] = {
-      description = strip_markup(data.description),
-    }
+    out[name] = { description = strip_markup(data.description) }
   end
   return out
 end
+
+-- ── Stats ─────────────────────────────────────────────────────────────────
+
+local function transform_stats(stats)
+  if not stats then return {} end
+  return stats  -- already clean integers from GetPlayerStat
+end
+
+-- ── Buffs ─────────────────────────────────────────────────────────────────
+
+local function transform_buffs(buffs)
+  if not buffs then return {} end
+  local out = {}
+  for _, b in ipairs(buffs) do
+    local entry = { name = b.name }
+    if b.duration_remaining ~= nil then
+      entry.duration_remaining = b.duration_remaining
+    end
+    if b.stacks then
+      entry.stacks = b.stacks
+    end
+    if not b.cast_by_player then
+      entry.source = "external"
+    end
+    out[#out + 1] = entry
+  end
+  return out
+end
+
+-- ── Root ──────────────────────────────────────────────────────────────────
 
 function M.transform(raw)
   local character = raw.character or {}
@@ -121,6 +165,8 @@ function M.transform(raw)
     bar_2_skills = transform_bar(skills.bar_2),
     gear         = transform_gear(raw.gear),
     sets_buffs   = transform_sets(raw.sets),
+    stats        = transform_stats(raw.stats),
+    buffs        = transform_buffs(raw.buffs),
   }
 end
 

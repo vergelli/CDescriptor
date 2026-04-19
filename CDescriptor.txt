@@ -13,6 +13,8 @@ adapters/zenimax/character.lua
 adapters/zenimax/skills.lua
 adapters/zenimax/gear.lua
 adapters/zenimax/sets.lua
+adapters/zenimax/stats.lua
+adapters/zenimax/buffs.lua
 pipeline/extractor.lua
 pipeline/transformer.lua
 pipeline/serializer.lua
