@@ -4,17 +4,21 @@ local CDescriptor = CDescriptor
 CDescriptor.Settings = {}
 
 local M = CDescriptor.Settings
+
+local SV_TABLE   = "CDescriptorSavedVars"
+local SV_VERSION = 1
+
 local DEFAULTS = {
   window_x      = nil,
   window_y      = nil,
   window_w      = 620,
   window_h      = 530,
-  include_sets     = true,   -- ON by default
-  include_stats    = false,  -- OFF by default
-  include_buffs    = false,  -- OFF by default
-  include_passives = false,  -- OFF by default
-  include_cp       = false,  -- OFF by default
-  include_prompt   = false,  -- OFF by default
+  include_sets     = true,
+  include_stats    = false,
+  include_buffs    = false,
+  include_passives = false,
+  include_cp       = false,
+  include_prompt   = false,
   prompt_cat       = "",
   prompt_sub       = "",
   prompt_diff      = "",
@@ -22,23 +26,16 @@ local DEFAULTS = {
   prompt_lang      = "English",
 }
 
+local sv_obj
+
 function M.load()
-  if CDescriptorSavedVars == nil then
-    CDescriptorSavedVars = {}
-  end
-  for k, v in pairs(DEFAULTS) do
-    if CDescriptorSavedVars[k] == nil then
-      CDescriptorSavedVars[k] = v
-    end
-  end
+  sv_obj = ZO_SavedVars:NewAccountWide(SV_TABLE, SV_VERSION, nil, DEFAULTS)
 end
 
 function M.get(key)
-  return CDescriptorSavedVars and CDescriptorSavedVars[key]
+  return sv_obj and sv_obj[key]
 end
 
 function M.set(key, value)
-  if CDescriptorSavedVars then
-    CDescriptorSavedVars[key] = value
-  end
+  if sv_obj then sv_obj[key] = value end
 end
