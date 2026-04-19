@@ -7,7 +7,7 @@ local M = {}
 function M.serialize(data, prompt_text)
   local json = CDescriptor.JSON
   assert(json, "CDescriptor.JSON not loaded")
-  local json_str = json.encode(data)
+  local json_str = json.encode(data, true)
   if prompt_text and prompt_text ~= "" then
     return prompt_text .. "\n\n" .. json_str
   end

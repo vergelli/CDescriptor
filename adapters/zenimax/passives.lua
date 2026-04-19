@@ -14,31 +14,28 @@ local SKILL_TYPES = {
   SKILL_TYPE_AVA,
 }
 
+-- Returns a table keyed by skill line name: { learned = N, total = M }
+-- Only includes lines where at least one passive is learned.
 function M.get_learned_passives()
   local result = {}
   for _, skill_type in ipairs(SKILL_TYPES) do
     local num_lines = GetNumSkillLines(skill_type)
     for line_index = 1, num_lines do
       local skill_line_id = GetSkillLineId(skill_type, line_index)
-      local line_name = GetSkillLineNameById(skill_line_id)
-      local num_abilities = GetNumSkillAbilities(skill_type, line_index)
-
-      for skill_index = 1, num_abilities do
-        local name, _, earned_rank, passive, _, purchased = GetSkillAbilityInfo(skill_type, line_index, skill_index)
-        if passive and purchased and earned_rank and earned_rank > 0 then
-          local ability_id = GetSkillAbilityId(skill_type, line_index, skill_index, false)
-          local description = nil
-          if ability_id and ability_id ~= 0 then
-            local desc = GetAbilityDescription(ability_id, earned_rank, "player")
-            if desc and desc ~= "" then description = desc end
+      local line_name     = GetSkillLineNameById(skill_line_id)
+      local total   = 0
+      local learned = 0
+      for skill_index = 1, GetNumSkillAbilities(skill_type, line_index) do
+        local _, _, earned_rank, passive, _, purchased = GetSkillAbilityInfo(skill_type, line_index, skill_index)
+        if passive then
+          total = total + 1
+          if purchased and earned_rank and earned_rank > 0 then
+            learned = learned + 1
           end
-          result[#result + 1] = {
-            name        = name,
-            description = description,
-            skill_line  = line_name,
-            rank        = earned_rank,
-          }
         end
+      end
+      if learned > 0 then
+        result[line_name] = { learned = learned, total = total }
       end
     end
   end

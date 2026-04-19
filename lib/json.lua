@@ -33,7 +33,7 @@ end
 
 local encode_value -- forward declaration
 
-encode_value = function(val, indent, step)
+encode_value = function(val, compact)
   local t = type(val)
   if val == nil then
     return 'null'
@@ -50,28 +50,32 @@ encode_value = function(val, indent, step)
   elseif t == 'string' then
     return encode_string(val)
   elseif t == 'table' then
-    local inner = indent .. step
     if is_array(val) then
       local parts = {}
       for i = 1, #val do
-        parts[i] = inner .. encode_value(val[i], inner, step)
+        parts[i] = encode_value(val[i], compact)
       end
-      return '[\n' .. table.concat(parts, ',\n') .. '\n' .. indent .. ']'
+      if compact then
+        return '[' .. table.concat(parts, ',') .. ']'
+      else
+        return '[\n  ' .. table.concat(parts, ',\n  ') .. '\n]'
+      end
     else
       local parts = {}
+      local sep = compact and ':' or ': '
       local key_order = val.__key_order
       if key_order then
         local seen = {}
         for _, k in ipairs(key_order) do
           if val[k] ~= nil then
             seen[k] = true
-            parts[#parts + 1] = inner .. encode_string(tostring(k)) .. ': ' .. encode_value(val[k], inner, step)
+            parts[#parts + 1] = encode_string(tostring(k)) .. sep .. encode_value(val[k], compact)
           end
         end
         local rest = {}
         for k, v in pairs(val) do
           if k ~= '__key_order' and not seen[k] then
-            rest[#rest + 1] = inner .. encode_string(tostring(k)) .. ': ' .. encode_value(v, inner, step)
+            rest[#rest + 1] = encode_string(tostring(k)) .. sep .. encode_value(v, compact)
           end
         end
         table.sort(rest)
@@ -79,20 +83,23 @@ encode_value = function(val, indent, step)
       else
         for k, v in pairs(val) do
           local key = encode_string(tostring(k))
-          parts[#parts + 1] = inner .. key .. ': ' .. encode_value(v, inner, step)
+          parts[#parts + 1] = key .. sep .. encode_value(v, compact)
         end
         table.sort(parts)
       end
       if #parts == 0 then return '{}' end
-      return '{\n' .. table.concat(parts, ',\n') .. '\n' .. indent .. '}'
+      local join = compact and ',' or ',\n  '
+      local wrap = compact and ('{' .. table.concat(parts, join) .. '}')
+                           or ('{\n  ' .. table.concat(parts, join) .. '\n}')
+      return wrap
     end
   else
     return encode_string('[' .. t .. ']')
   end
 end
 
-function M.encode(val, indent_step)
-  return encode_value(val, '', indent_step or '  ')
+function M.encode(val, compact)
+  return encode_value(val, compact)
 end
 
 CDescriptor.JSON = M

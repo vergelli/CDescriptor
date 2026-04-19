@@ -165,7 +165,7 @@ function M.on_generate()
 
   set_output(output_str)
   update_scrollbar()
-  set_status(C.UI.STATUS_DONE)
+  set_status("Done. (" .. #output_str .. " chars)")
 end
 
 function M.on_clear()

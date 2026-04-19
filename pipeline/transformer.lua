@@ -141,18 +141,12 @@ end
 
 -- ── Passives ──────────────────────────────────────────────────────────────
 
+-- Returns a flat object: { ["Skill Line"] = "learned/total", ... }
 local function transform_passives(passives)
   if not passives then return {} end
   local out = {}
-  for _, p in ipairs(passives) do
-    local entry = {
-      __key_order = KO.PASSIVE_ENTRY,
-      name        = p.name,
-      description = p.description and strip_markup(p.description) or nil,
-      skill_line  = p.skill_line,
-      rank        = p.rank,
-    }
-    out[#out + 1] = entry
+  for line_name, data in pairs(passives) do
+    out[line_name] = data.learned .. "/" .. data.total
   end
   return out
 end

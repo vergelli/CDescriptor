@@ -9,7 +9,6 @@ CDescriptor.KeyOrders = {
   SCRIPT_ENTRY = { "name", "description" },
   SET_ENTRY    = { "bonuses", "count_equipped" },
   BUFF_ENTRY   = { "name", "description", "stacks", "source" },
-  PASSIVE_ENTRY   = { "name", "description", "skill_line", "rank" },
   CP_DISCIPLINE   = { "slottable", "passive" },
   CP_SKILL_ENTRY  = { "name", "points" },
 }
