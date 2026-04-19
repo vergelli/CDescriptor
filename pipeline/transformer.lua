@@ -130,10 +130,12 @@ local function transform_sets(sets)
     for _, b in ipairs(data.bonuses or {}) do
       clean_bonuses[#clean_bonuses + 1] = strip_markup(b)
     end
+    local cp = data.count_perfected
     out[name] = {
-      __key_order    = KO.SET_ENTRY,
-      bonuses        = clean_bonuses,
-      count_equipped = data.count_equipped,
+      __key_order     = KO.SET_ENTRY,
+      bonuses         = clean_bonuses,
+      count_equipped  = data.count_equipped,
+      count_perfected = (cp and cp > 0 and cp < data.count_equipped) and cp or nil,
     }
   end
   return out

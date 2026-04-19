@@ -25,7 +25,7 @@ local ARMOR_SLOTS = {
 
 local function get_set_data(link)
   local has_set, set_name, num_bonuses, num_normal, _, _, num_perfected = GetItemLinkSetInfo(link, true)
-  if not has_set or num_bonuses == 0 then return nil, nil, nil end
+  if not has_set or num_bonuses == 0 then return nil, nil, nil, nil, nil end
 
   local raw_bonuses = {}
   for i = 1, num_bonuses do
@@ -39,8 +39,9 @@ local function get_set_data(link)
   for _, entry in ipairs(raw_bonuses) do
     bonuses[#bonuses + 1] = entry.desc
   end
-  local count = (num_normal or 0) + (num_perfected or 0)
-  return set_name, bonuses, count
+  local n_normal = num_normal   or 0
+  local n_perf   = num_perfected or 0
+  return set_name, bonuses, n_normal + n_perf, n_normal, n_perf
 end
 
 function M.get_active_sets()
@@ -54,13 +55,33 @@ function M.get_active_sets()
     if has_item then
       local link = GetItemLink(BAG_WORN, equip_slot, LINK_STYLE_BRACKETS)
       if link and link ~= "" then
-        local set_name, bonuses, count = get_set_data(link)
+        local set_name, bonuses, count, n_normal, n_perf = get_set_data(link)
         if set_name and not sets[set_name] then
-          sets[set_name] = { bonuses = bonuses, count_equipped = count }
+          sets[set_name] = {
+            bonuses         = bonuses,
+            count_equipped  = count,
+            count_perfected = n_perf,
+          }
         end
       end
     end
   end
+
+  -- When "Perfected X" and "X" both appear (same family), drop "X":
+  -- the perfected entry already includes all non-perfected pieces in its count.
+  local to_remove = {}
+  for name in pairs(sets) do
+    if name:sub(1, 10) == "Perfected " then
+      local base = name:sub(11)
+      if sets[base] then
+        to_remove[#to_remove + 1] = base
+      end
+    end
+  end
+  for _, name in ipairs(to_remove) do
+    sets[name] = nil
+  end
+
   return sets
 end
 
