@@ -60,18 +60,23 @@ function M.init()
   ZO_CheckButton_SetToggleFunction(Controls.check_cp,       function(_, checked) M.on_checkbox_changed(SV.INCLUDE_CP,       checked) end)
   ZO_CheckButton_SetToggleFunction(Controls.check_prompt,   function(_, checked) M.on_prompt_checkbox_changed(checked)              end)
 
+  local ver_label = _G[names.VERSION_LABEL]
+  if ver_label then
+    ver_label:SetText("API " .. tostring(GetAPIVersion()) .. "  ·  CDescriptor v" .. C.VERSION)
+  end
+
   Controls.scrollbar:SetMinMax(1, 1)
   Controls.scrollbar:SetValue(1)
 
   local w = CDescriptor.Settings.get(SV.WINDOW_W)
   local h = CDescriptor.Settings.get(SV.WINDOW_H)
   if w and h then Controls.window:SetDimensions(w, h) end
-  Controls.window:SetDimensionConstraints(380, 460, 0, 0)
+  Controls.window:SetDimensionConstraints(450, 460, 0, 0)
 
   CDescriptor.PromptUI.init()
 
   if CDescriptor.Settings.get(SV.INCLUDE_PROMPT) then
-    Controls.window:SetDimensionConstraints(380, 600, 0, 0)
+    Controls.window:SetDimensionConstraints(450, 560, 0, 0)
     CDescriptor.PromptUI.show()
   end
 end
@@ -117,10 +122,10 @@ end
 function M.on_prompt_checkbox_changed(checked)
   CDescriptor.Settings.set(C.SAVED_VARS.INCLUDE_PROMPT, checked)
   if checked then
-    Controls.window:SetDimensionConstraints(380, 600, 0, 0)
+    Controls.window:SetDimensionConstraints(450, 560, 0, 0)
     CDescriptor.PromptUI.show()
   else
-    Controls.window:SetDimensionConstraints(380, 460, 0, 0)
+    Controls.window:SetDimensionConstraints(450, 460, 0, 0)
     CDescriptor.PromptUI.hide()
   end
 end
@@ -186,7 +191,7 @@ function M.on_clear()
 end
 
 function M.on_copy()
-  PlaySound(SOUNDS.LFG_READY_CHECK)
+  PlaySound(SOUNDS.NEW_TIMED_NOTIFICATION)
   Controls.output:TakeFocus()
   Controls.output:SelectAll()
   set_status(C.UI.STATUS_COPY, true)

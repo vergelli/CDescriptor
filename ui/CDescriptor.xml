@@ -109,18 +109,8 @@
           <Anchor point="TOPLEFT" relativeTo="$(parent)CheckPrompt" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="6"/>
           <Controls>
 
-            <Label name="$(parent)PatchLabel" font="ZoFontGame" color="0.9,0.78,0.5,1" text="Patch:">
-              <Anchor point="TOPLEFT" offsetY="8"/>
-            </Label>
-            <EditBox name="CDescriptorPromptPatch" font="ZoFontGame" maxInputCharacters="64" mouseEnabled="true" color="1,1,1,1">
-              <Dimensions x="140" y="26"/>
-              <Anchor point="LEFT" relativeTo="$(parent)PatchLabel" relativePoint="RIGHT" offsetX="8"/>
-              <OnFocusLost>CDescriptor.PromptUI.on_patch_changed()</OnFocusLost>
-              <OnEnter>CDescriptor.PromptUI.on_patch_changed()</OnEnter>
-            </EditBox>
-
             <Label name="$(parent)LangLabel" font="ZoFontGame" color="0.9,0.78,0.5,1" text="Language:">
-              <Anchor point="TOPLEFT" offsetY="42"/>
+              <Anchor point="TOPLEFT" offsetY="8"/>
             </Label>
             <Control name="CDescriptorPromptLang" inherits="ZO_ComboBox">
               <Dimensions x="160" y="26"/>
@@ -128,7 +118,7 @@
             </Control>
 
             <Label name="$(parent)ContentLabel" font="ZoFontGame" color="0.9,0.78,0.5,1" text="Content:">
-              <Anchor point="TOPLEFT" offsetY="76"/>
+              <Anchor point="TOPLEFT" offsetY="42"/>
             </Label>
             <Control name="CDescriptorPromptContentCat" inherits="ZO_ComboBox">
               <Dimensions x="90" y="26"/>
@@ -144,7 +134,7 @@
             </Control>
 
             <Label name="$(parent)RoleLabel" font="ZoFontGame" color="0.9,0.78,0.5,1" text="Role:">
-              <Anchor point="TOPLEFT" offsetY="110"/>
+              <Anchor point="TOPLEFT" offsetY="76"/>
             </Label>
             <Control name="CDescriptorPromptRole" inherits="ZO_ComboBox">
               <Dimensions x="200" y="26"/>
@@ -207,6 +197,10 @@
           <Anchor point="BOTTOMRIGHT" offsetX="-20" offsetY="-14"/>
           <OnClicked>CDescriptor.UI.on_copy()</OnClicked>
         </Button>
+
+        <Label name="$(parent)VersionLabel" font="ZoFontGameSmall" color="0.45,0.45,0.45,1" horizontalAlignment="CENTER">
+          <Anchor point="BOTTOM" offsetY="-18"/>
+        </Label>
 
       </Controls>
     </TopLevelControl>

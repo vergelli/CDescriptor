@@ -15,7 +15,6 @@ local DEFAULTS = {
   include_passives = false,  -- OFF by default
   include_cp       = false,  -- OFF by default
   include_prompt   = false,  -- OFF by default
-  prompt_patch     = "",
   prompt_cat       = "",
   prompt_sub       = "",
   prompt_diff      = "",

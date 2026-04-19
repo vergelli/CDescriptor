@@ -62,34 +62,37 @@ end
 local function transform_weapon_slot(item)
   if not item then return nil end
   return {
+    __key_order = KO.GEAR_WEAPON,
     item    = item.weapon_type or item.name,
     set     = item.set_name,
     quality = item.quality,
-    enchant = transform_enchant(item),
     trait   = strip_markup(item.trait),
+    enchant = transform_enchant(item),
   }
 end
 
 local function transform_armor_slot(item)
   if not item then return nil end
   return {
+    __key_order = KO.GEAR_ARMOR,
     item    = item.name,
-    weight  = item.armor_type,
     set     = item.set_name,
+    weight  = item.armor_type,
     quality = item.quality,
-    enchant = transform_enchant(item),
     trait   = strip_markup(item.trait),
+    enchant = transform_enchant(item),
   }
 end
 
 local function transform_jewelry_slot(item)
   if not item then return nil end
   return {
+    __key_order = KO.GEAR_JEWELRY,
     item    = item.name,
     set     = item.set_name,
     quality = item.quality,
-    enchant = transform_enchant(item),
     trait   = strip_markup(item.trait),
+    enchant = transform_enchant(item),
   }
 end
 

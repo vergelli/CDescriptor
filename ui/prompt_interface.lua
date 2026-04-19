@@ -8,7 +8,7 @@ local M        = CDescriptor.PromptUI
 local C        -- set in M.init()
 local Controls = {}
 
-local PANEL_HEIGHT = 144
+local PANEL_HEIGHT = 110
 
 -- ── Content type lookup ───────────────────────────────────────────────────────
 
@@ -134,12 +134,6 @@ function diff_combo_cb(name)
   sv_set(C.SAVED_VARS.PROMPT_DIFF, name)
 end
 
--- ── Callbacks ─────────────────────────────────────────────────────────────────
-
-function M.on_patch_changed()
-  sv_set(C.SAVED_VARS.PROMPT_PATCH, Controls.patch_input:GetText())
-end
-
 -- ── Init ──────────────────────────────────────────────────────────────────────
 
 function M.init()
@@ -148,7 +142,6 @@ function M.init()
   local SV    = C.SAVED_VARS
 
   Controls.panel        = _G[names.PROMPT_PANEL]
-  Controls.patch_input  = _G[names.PROMPT_PATCH]
   Controls.lang         = _G[names.PROMPT_LANG]
   Controls.content_cat  = _G[names.PROMPT_CONTENT_CAT]
   Controls.content_sub  = _G[names.PROMPT_CONTENT_SUB]
@@ -159,11 +152,6 @@ function M.init()
   if Controls.panel then
     Controls.panel:SetHeight(0)
     Controls.panel:SetHidden(true)
-  end
-
-  -- Patch input
-  if Controls.patch_input then
-    Controls.patch_input:SetText(sv(SV.PROMPT_PATCH) or "")
   end
 
   -- Language combo
@@ -252,7 +240,7 @@ end
 
 function M.build_prompt_settings()
   return {
-    patch          = sv(C.SAVED_VARS.PROMPT_PATCH) or "",
+    patch          = tostring(GetAPIVersion()),
     content_type   = get_content_type_str(),
     analysis_focus = get_role_str(),
     language       = get_language_str(),

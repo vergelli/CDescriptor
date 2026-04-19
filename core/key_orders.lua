@@ -12,4 +12,7 @@ CDescriptor.KeyOrders = {
   BUFF_ENTRY   = { "name", "description", "stacks", "source" },
   CP_DISCIPLINE   = { "slottable", "passive" },
   CP_SKILL_ENTRY  = { "name", "points" },
+  GEAR_WEAPON  = { "item", "set", "quality", "trait", "enchant" },
+  GEAR_ARMOR   = { "item", "set", "weight", "quality", "trait", "enchant" },
+  GEAR_JEWELRY = { "item", "set", "quality", "trait", "enchant" },
 }
