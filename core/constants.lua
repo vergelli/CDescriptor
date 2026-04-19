@@ -23,7 +23,7 @@ CDescriptor.Constants = {
   -- UI strings
   UI = {
     GENERATE_BUTTON   = "Generate",
-    COPY_BUTTON       = "Copy",
+    COPY_BUTTON       = "Select",
     CLEAR_BUTTON      = "Clear",
     STATUS_IDLE       = "",
     STATUS_EXTRACT    = "Extracting...",

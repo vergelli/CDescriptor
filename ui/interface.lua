@@ -47,10 +47,16 @@ function M.init()
   local w = CDescriptor.Settings.get(SV.WINDOW_W)
   local h = CDescriptor.Settings.get(SV.WINDOW_H)
   if w and h then Controls.window:SetDimensions(w, h) end
+  Controls.window:SetDimensionConstraints(400, 320, 0, 0)
 end
 
-local function set_status(msg)
+local function set_status(msg, highlight)
   Controls.status:SetText(msg or "")
+  if highlight then
+    Controls.status:SetColor(1, 0.8, 0, 1)    -- ESO amber
+  else
+    Controls.status:SetColor(0.7, 0.7, 0.7, 1) -- default gray
+  end
 end
 
 local function set_output(text)
@@ -126,7 +132,7 @@ function M.on_copy()
   PlaySound(SOUNDS.COMBO_CLICK)
   Controls.output:TakeFocus()
   Controls.output:SelectAll()
-  set_status(C.UI.STATUS_COPY)
+  set_status(C.UI.STATUS_COPY, true)
 end
 
 function M.on_scroll(value)
