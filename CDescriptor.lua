@@ -1,5 +1,7 @@
 CDescriptor = CDescriptor or {}
 
+ZO_CreateStringId("SI_BINDING_NAME_CDESCRIPTOR_TOGGLE", "Toggle CDescriptor")
+
 local function on_addon_loaded()
   local K = CDescriptor.Constants
 
