@@ -13,7 +13,8 @@ local SLOT_LABELS = { "1", "2", "3", "4", "5" }
 -- Strips ESO color markup: |cRRGGBBtext|r  →  text
 local function strip_markup(s)
   if type(s) ~= "string" then return s end
-  return (s:gsub("|c%x%x%x%x%x%x(.-)%|r", "%1"))
+  s = s:gsub("|c%x%x%x%x%x%x(.-)%|r", "%1")
+  return (s:match("^(.-)%s*$"))  -- trim trailing whitespace/newlines
 end
 
 -- ── Skills ────────────────────────────────────────────────────────────────
