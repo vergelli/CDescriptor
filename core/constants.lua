@@ -4,7 +4,7 @@ CDescriptor.Constants = {
   ADDON_NAME    = "CDescriptor",
   VERSION       = "0.1.0",
   SLASH_COMMAND = "/cdescriptor",
-  DEBUG         = true,
+  DEBUG         = false,
 
   -- Control names as defined in CDescriptor.xml
   CONTROLS = {
