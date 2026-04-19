@@ -122,7 +122,7 @@ local function populate_sub(cat)
   Controls.content_diff:SetHidden(not show_diff)
 end
 
-function sub_combo_cb(name)
+local function sub_combo_cb(name)
   sv_set(C.SAVED_VARS.PROMPT_SUB,  name)
   sv_set(C.SAVED_VARS.PROMPT_DIFF, "")
   local show_diff = DIFFS_FOR[name] == true
@@ -130,7 +130,7 @@ function sub_combo_cb(name)
   if show_diff then populate_diff() end
 end
 
-function diff_combo_cb(name)
+local function diff_combo_cb(name)
   sv_set(C.SAVED_VARS.PROMPT_DIFF, name)
 end
 
